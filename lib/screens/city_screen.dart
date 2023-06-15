@@ -26,9 +26,27 @@ class _CityScreenState extends State<CityScreen> {
     super.initState();
   }
 
+  bool checkCity = true;
+  double scale = 1.0;
+  double umbrellaScale = 0.0;
+  TextStyle style = tsCity;
+
+  void _changeScale() {
+    setState(() => scale = scale == 1.0 ? 2.0 : 1.0);
+  }
+  void _changeUmbrellaScale() {
+    setState(() => umbrellaScale = umbrellaScale == 0.0 ? 2.0 : 0.0);
+  }
+  void _changeStyle() {
+    setState(() => style = style == tsCity ? tsTitleBolt.copyWith(color: Colors.white) : tsCity);
+  }
+
   @override
   Widget build(BuildContext context) {
-
+    if (checkCity && context.read<WeatherBloc>().state.city.isNotEmpty) {
+      _controller.text = context.read<WeatherBloc>().state.city;
+      checkCity = false;
+    }
 
     return Scaffold(
       backgroundColor: currentClr,
@@ -38,27 +56,53 @@ class _CityScreenState extends State<CityScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              AnimatedScale(
+                scale: umbrellaScale,
+                duration: const Duration(seconds: 1),
+                curve: Curves.fastOutSlowIn,
+                child: const Image(
+                  image: AssetImage('assets/images/weather.png'),
+                  height: 100,
+                  width: 100,
+                  color: Colors.white,
+                ),
+              ),
               Hero(
-                  tag: 'up',
-                  child: Material(
-                      type: MaterialType.transparency,
-                      child: Container(
-                          height: 100,
-                          width: MediaQuery.of(context).size.width,
-                          padding: const EdgeInsets.symmetric(horizontal: 25),
-                          decoration:  BoxDecoration(
-                            gradient: bdGradient,
-                            border: Border.all(color: Colors.white,width: 3,),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(brDef)),
-                            //color: Colors.black,
+                tag: 'up',
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: Container(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    decoration: BoxDecoration(
+                      gradient: bdGradient,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 3,
+                      ),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(brDef)),
+                      //color: Colors.black,
+                    ),
+                    child: Center(
+                      child: AnimatedScale(
+                        scale: scale,
+                        duration: const Duration(seconds: 1),
+                        curve: Curves.fastOutSlowIn,
+                        child: AnimatedDefaultTextStyle(
+                          style: style,
+                          duration: const Duration(seconds: 1),
+                          child: const Text(
+                            'Погода',
+                            // style: tsCity,
                           ),
-                          child: const Center(
-                            child: Text(
-                              'Погода',
-                              style: tsCity,
-                            ),
-                          ),),),),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 25),
               Hero(
                 tag: 'black',
@@ -84,21 +128,38 @@ class _CityScreenState extends State<CityScreen> {
                             style: tsLite.copyWith(color: currentClr),
                           ),
                         ),
-                        OutlinedButton(
-                          onPressed: () {
-                            context
-                                .read<WeatherBloc>()
-                                .add(CityEvent(_controller.text));
-                            context
-                                .read<WeatherBloc>()
-                                .add(LoadWeatherEvent());
+                        AnimatedScale(
+                          scale: scale,
+                          duration: const Duration(seconds: 1),
+                          curve: Curves.fastOutSlowIn,
+                          onEnd: () {
+                            context.read<WeatherBloc>().add(LoadWeatherEvent());
                             Navigator.pushReplacementNamed(
                                 context, WeatherScreen.route);
                           },
-                          child: Icon(
-                            CupertinoIcons.tornado,
-                            size: 30,
-                            color: currentClr,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              context
+                                  .read<WeatherBloc>()
+                                  .add(CityEvent(_controller.text));
+                              _changeScale();
+                              _changeStyle();
+                              _changeUmbrellaScale();
+                              //Future.delayed(const Duration(seconds: 1));
+                              // context
+                              //     .read<WeatherBloc>()
+                              //     .add(CityEvent(_controller.text));
+                              // context
+                              //     .read<WeatherBloc>()
+                              //     .add(LoadWeatherEvent());
+                              // Navigator.pushReplacementNamed(
+                              //     context, WeatherScreen.route);
+                            },
+                            child: Icon(
+                              CupertinoIcons.tornado,
+                              size: 30,
+                              color: currentClr,
+                            ),
                           ),
                         ),
                       ],

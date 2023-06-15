@@ -15,7 +15,7 @@ const TextStyle tsTitleBolt = TextStyle(
   fontSize: 45,
   fontFamily: 'Effra',
   fontWeight: FontWeight.bold,
-  color: Color(0xffFfffff),
+  color: Colors.black87,
 );
 const TextStyle tsLite = TextStyle(
   fontFamily: 'Effra',
@@ -54,6 +54,7 @@ const Color clr1 = Color(0xFFffe142);
 const Color clr2 = Color(0xFF42c6ff);
 const Color clr3 = Color(0xFFff64d4);
 const Color clr4 = Color(0xFF32D463);
+const List<Color> colors = [clr1, clr2, clr3, clr4];
 
 const LinearGradient bdGradient = LinearGradient(
     begin: Alignment.centerLeft,

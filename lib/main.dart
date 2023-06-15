@@ -16,26 +16,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-        providers: [
-          BlocProvider(create:(context) => WeatherBloc()..add(LoadCitySharedPreferencesEvent())),
-          BlocProvider(create:(context) => DaysBloc())
-        ],
-      child: BlocBuilder<WeatherBloc,WeatherState>(
-        builder: (context,state){
-          return MaterialApp(
-              title: 'Flutter Demo',
-              theme: ThemeData(
-                primarySwatch: Colors.blue,
-              ),
-              home: state.city.isEmpty ?  const CityScreen() : const WeatherScreen(),
-              routes: {
-                CityScreen.route: (context) => const CityScreen(),
-                WeatherScreen.route: (context) => const WeatherScreen(),
-                DaysScreen.route: (context) =>  DaysScreen(),
-              }
-          );
-        }
-      ),
+      providers: [
+        BlocProvider(create:(context) => WeatherBloc()..add(LoadCitySharedPreferencesEvent())),
+        BlocProvider(create:(context) => DaysBloc())
+      ],
+      child: Builder(builder: (context) {
+        //context.read<WeatherBloc>().add(LoadCitySharedPreferencesEvent());
+        return MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            initialRoute: context.read<WeatherBloc>().state.city.isNotEmpty
+                ? WeatherScreen.route
+                : CityScreen.route,
+            routes: {
+              CityScreen.route: (context) => const CityScreen(),
+              WeatherScreen.route: (context) => const WeatherScreen(),
+              DaysScreen.route: (context) => DaysScreen(),
+            });
+      }),
     );
   }
 }

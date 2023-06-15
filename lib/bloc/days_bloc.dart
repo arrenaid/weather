@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +11,7 @@ part 'days_state.dart';
 class DaysBloc extends Bloc<DaysEvent, DaysState> {
   final WeatherMapHelper client = WeatherMapHelper();
 
-  DaysBloc() : super(const DaysState([], '')) {
+  DaysBloc() : super(const DaysState([], '', [])) {
     on<DaysEvent>(_forecast);
   }
 
@@ -34,10 +36,11 @@ class DaysBloc extends Bloc<DaysEvent, DaysState> {
         }
         //сортировка по возростанию температуры
         result.sort((Weather a, Weather b) => a.temp.compareTo(b.temp));
-        emit(DaysState(result, event.city));
+        emit(DaysState(result, event.city, forecast));
       }
-    } catch (e) {
-      emit(ErrorDaysState(e.toString()));
-    }
+    }on SocketException catch (e) { emit(ErrorDaysState('SocketException: $e'));
+    }on HttpException catch (e){  emit(ErrorDaysState('HttpException: $e'));
+    }on FormatException catch (e){  emit(ErrorDaysState('FormatException: $e'));
+    }catch (e) {emit(ErrorDaysState(e.toString()));}
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,9 +17,8 @@ class WeatherScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var colors = [clr1, clr2, clr3, clr4];
     Color currentClr = colors[Random().nextInt(colors.length)];
-    colors.remove(currentClr);
+    //colors.remove(currentClr);
     return Scaffold(
       backgroundColor: currentClr,
       appBar: AppBar(
@@ -52,17 +52,20 @@ class WeatherScreen extends StatelessWidget {
         child: BlocConsumer<WeatherBloc, WeatherState>(
           listener: (context, state) {
             if (state is ErrorState) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                behavior: SnackBarBehavior.floating,
-                margin: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).size.height / 2),
-                content: Text(
-                  'Ошибка получения данных : ${state.message}',
-                  //state.message,
-                  style: tsCity,
-                ),
-                backgroundColor: Colors.red,
-              ));
+              Flushbar(
+                flushbarPosition: FlushbarPosition.TOP,
+                flushbarStyle: FlushbarStyle.FLOATING,
+                titleText: Text('Ошибка', style: tsCity,),
+                messageText: Text( state.message,
+                  style: tsMini,),
+                duration: const Duration(seconds: 5),
+                isDismissible: false,
+                borderRadius: BorderRadius.circular(15),
+                backgroundGradient: bdGradient,
+                borderWidth: 2,
+                borderColor: Colors.white,
+                margin: const EdgeInsets.only(top: 100, left: 20, right: 20),
+              ).show(context);
             }
           },
           builder: (buildContext, state) {
@@ -76,14 +79,13 @@ class WeatherScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       const SizedBox(height: 10),
-                      //Дата
-
                       //city
                       Text(
                         state.weather.city.toUpperCase(),
                         style: tsTitleBolt,
                         textAlign: TextAlign.center,
                       ),
+                      //Дата
                       Chip(
                         label: Text(
                           DateFormat.MMMMEEEEd().format(DateTime.now()),
@@ -222,11 +224,44 @@ class WeatherScreen extends StatelessWidget {
                 ),
               );
             }
+            if (state is ErrorState) {
+              return Column(
+                children: [
+                  const Spacer(),
+                  const Center(
+                    child: Image(
+                      image: AssetImage('assets/images/weather.png'),
+                      height: 100,
+                      width: 100,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const Spacer(),
+                  Hero(
+                    tag: 'black',
+                    child: Container(
+                      height: MediaQuery.of(context).size.height/10,
+                      margin: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.black,
+                      ),
+                      child: Center(child: Text(
+                        'Проблема:\n${state.message}',
+                        style: tsMini.copyWith(color: currentClr),)),
+                    ),
+                  ),
+                ],
+              );
+            }
             if (state is CityState) {
               context.read<WeatherBloc>().add(LoadWeatherEvent());
-              return const CircularProgressIndicator();
+              return const CircularProgressIndicator(color: Colors.white,
+              backgroundColor: Colors.black,);
             }
-            return const LinearProgressIndicator();
+            return const LinearProgressIndicator(color: Colors.white,
+            backgroundColor: Colors.black,);
           },
         ),
       ),

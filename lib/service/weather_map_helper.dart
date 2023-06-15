@@ -15,10 +15,11 @@ class WeatherMapHelper {
       var body = jsonDecode(response.body);
       return body;
     } else {
-      return Future.error(response.statusCode);
+      //return Future.error(response.statusCode);
+      throw(response.statusCode);
     }
     }catch(e){
-    print(e);
+      rethrow;
     }
   }
 

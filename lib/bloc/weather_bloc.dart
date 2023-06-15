@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,6 +39,9 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       Weather weather = Weather.fromJson(map);
       _saveCity(state.city);
       emit(LoadWeatherState(weather, state.city));
+    }on SocketException catch (e) { emit(ErrorState('SocketException: $e', state.city));
+    }on HttpException catch (e){  emit(ErrorState('HttpException: $e', state.city));
+    }on FormatException catch (e){  emit(ErrorState('FormatException: $e', state.city));
     } catch (e) {
       emit(ErrorState(e.toString(), state.city));
     }
