@@ -39,6 +39,7 @@ class WeatherMapHelper {
             Weather(
               city: forecast['city']['name'].toString(),
               main: forecast['list'][i]['weather'][0]['main'].toString(),
+              icon: forecast['list'][i]['weather'][0]['icon'].toString(),
               temp:
                   double.parse(forecast['list'][i]['main']['temp'].toString()),
               feels: double.parse(

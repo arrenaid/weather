@@ -2,6 +2,7 @@
 class Weather{
   late final String city;
   late final String main;
+  late final String icon;
   late final double temp;
   late final double feels;
   late final double min;
@@ -14,6 +15,7 @@ class Weather{
 
   Weather({ required this.city,
     required this.main,
+    required this.icon,
       required this.temp,
       required this.feels,
       required this.min,
@@ -28,6 +30,7 @@ class Weather{
   Weather.fromJson(Map<String, dynamic> map){
     city = map['name'].toString();
       main = map['weather'][0]['main'].toString();
+    icon = map['weather'][0]['icon'].toString();
     temp = double.parse(map['main']['temp'].toString());
     feels = double.parse(map['main']['feels_like'].toString());
     min = double.parse(map['main']['temp_min'].toString());
@@ -40,6 +43,6 @@ class Weather{
 
   @override
   String toString() {
-    return 'Weather{city: $city, temp: $temp, feels: $feels, min: $min, max: $max, wind: $wind, humidity: $humidity, pressure: $pressure, clouds: $clouds}';
+    return 'Weather{city: $city, main: $main, icon: $icon, temp: $temp, feels: $feels, min: $min, max: $max, wind: $wind, humidity: $humidity, pressure: $pressure, clouds: $clouds}';
   }
 }

@@ -17,22 +17,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create:(context) => WeatherBloc()..add(LoadCitySharedPreferencesEvent())),
+        BlocProvider(create:(context) => WeatherBloc()
+          ..add(LoadCitySharedPreferencesEvent())),
         BlocProvider(create:(context) => DaysBloc())
       ],
-      child: Builder(builder: (context) {
-        //context.read<WeatherBloc>().add(LoadCitySharedPreferencesEvent());
+      child: BlocBuilder<WeatherBloc,WeatherState>(
+          builder: (context, state) {
         return MaterialApp(
             title: 'Flutter Demo',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
-            initialRoute: context.read<WeatherBloc>().state.city.isNotEmpty
-                ? WeatherScreen.route
-                : CityScreen.route,
+            theme: ThemeData( primarySwatch: Colors.blue),
+            // initialRoute: context.read<WeatherBloc>().state.city.isNotEmpty
+            //     ? WeatherScreen.route
+            //     : CityScreen.route,
+            home: state.city.isEmpty ?  const CityScreen() :  WeatherScreen(),
             routes: {
               CityScreen.route: (context) => const CityScreen(),
-              WeatherScreen.route: (context) => const WeatherScreen(),
+              WeatherScreen.route: (context) =>  WeatherScreen(),
               DaysScreen.route: (context) => DaysScreen(),
             });
       }),
