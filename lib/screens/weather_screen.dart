@@ -13,7 +13,6 @@ import 'package:weather/screens/days_screen.dart';
 class WeatherScreen extends StatelessWidget {
   WeatherScreen({Key? key}) : super(key: key);
   static const String route = 'weather';
-  final String cityName = 'moscow';
   String iconName = '';
 
   @override
@@ -50,32 +49,19 @@ class WeatherScreen extends StatelessWidget {
         ],
       ),
       body: GestureDetector(
-        // Using the DragEndDetails allows us to only fire once per swipe.
         onVerticalDragEnd: (details) {
           if (details.velocity.pixelsPerSecond.dy > 500) {
-            // Swipe down gesture recognized
-            print('Swipe down: $details');
             context.read<WeatherBloc>().add(LoadWeatherEvent());
           }
-          // else if (details.velocity.pixelsPerSecond.dy < 0) {
-          //   // Swipe up gesture recognized
-          //   print('Swipe up: $details');
-          // }
         },
         onHorizontalDragEnd: (dragEndDetails) {
           if (dragEndDetails.primaryVelocity! < 500) {
-            // Page forwards
-            print('Move page forwards');
             context
                 .read<DaysBloc>()
                 .add(LoadDaysEvent(context.read<WeatherBloc>().state.city));
             Navigator.pushNamed(context, DaysScreen.route,);
-            //_goForward();
           } else if (dragEndDetails.primaryVelocity! > 500) {
-            // Page backwards
-            print('Move page backwards');
             Navigator.pushNamed(context, CityScreen.route);
-            //_goBack();
           }
         },
         child: SafeArea(
@@ -104,7 +90,6 @@ class WeatherScreen extends StatelessWidget {
               }
             },
             builder: (buildContext, state) {
-
               if (state is LoadWeatherState) {
                 iconName = state.weather.icon;
                 return SingleChildScrollView(
@@ -254,7 +239,6 @@ class WeatherScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-
                         const SizedBox(height: 10),
                       ],
                     ),
