@@ -16,7 +16,7 @@
    Требования:
 1. Для реализации, можно использовать открытый API
    https://openweathermap.org/api/hourly-forecast, или любой другой.
-2. Дизайн можно использовать любой.
+2. Дизайн можно использовать любой.(https://dribbble.com/shots/20675054-Mobile-Weather-app)
 3. В случае отсутствия интернета или получения ошибки из api при
    переходе на 2 экран, приложение, должно показать SnackBar в
    центре экрана с ошибкой. Также, в центре экран отобразить текст
@@ -25,3 +25,12 @@
 5. Для управления состоянием использовать flutter_bloc.
 6. Код необходимо выгрузить на GitHub и прислать ссылку.
 7. На выполнение задания предоставляется максимум 3 дня.
+## Features
+bloc
+http
+shared preferences
+another flushbar
+## Screenshots
+![Screenshot_2023-06-18-21-19-01-947_org arrenaid weather](https://github.com/arrenaid/weather/assets/28564411/4eade217-cd67-4478-9f44-fc970ca5eb53)
+![Screenshot_2023-06-18-21-19-16-476_org arrenaid weather](https://github.com/arrenaid/weather/assets/28564411/c9bc01d0-064d-4806-8e0e-4437dce92f4d)
+
