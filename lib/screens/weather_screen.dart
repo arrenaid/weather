@@ -7,8 +7,12 @@ import 'package:intl/intl.dart';
 import 'package:weather/bloc/days_bloc.dart';
 import 'package:weather/bloc/weather_bloc.dart';
 import 'package:weather/constants.dart';
+import 'package:weather/model/weather_base.dart';
 import 'package:weather/screens/city_screen.dart';
 import 'package:weather/screens/days_screen.dart';
+
+import '../widgets/black_rock_segment.dart';
+import '../widgets/weekly_forecast_listview.dart';
 
 class WeatherScreen extends StatelessWidget {
   WeatherScreen({Key? key}) : super(key: key);
@@ -21,33 +25,36 @@ class WeatherScreen extends StatelessWidget {
     //colors.remove(currentClr);
     return Scaffold(
       backgroundColor: currentClr,
-      appBar: AppBar(
-        flexibleSpace: Hero(
-          tag: 'up',
-          child: Container(
-            decoration: const BoxDecoration(gradient: bdGradient),
-          ),
-        ),
-        leading: IconButton(
-          onPressed: () => Navigator.pushNamed(context, CityScreen.route),
-          icon: const Icon(CupertinoIcons.t_bubble_fill), //cloud_moon_rain_fill
-        ),
-        title: const Text(
-          'Погода',
-          style: tsCity,
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context
-                  .read<DaysBloc>()
-                  .add(LoadDaysEvent(context.read<WeatherBloc>().state.city));
-              Navigator.pushNamed(context, DaysScreen.route,);
-            },
-            icon: const Icon(CupertinoIcons.news_solid),
-          )
-        ],
-      ),
+      // appBar: AppBar(
+      //   flexibleSpace: Hero(
+      //     tag: 'up',
+      //     child: Container(
+      //       decoration: const BoxDecoration(gradient: bdGradient),
+      //     ),
+      //   ),
+      //   leading: IconButton(
+      //     onPressed: () => Navigator.pushNamed(context, CityScreen.route),
+      //     icon: const Icon(CupertinoIcons.t_bubble_fill), //cloud_moon_rain_fill
+      //   ),
+      //   title: const Text(
+      //     'Погода',
+      //     style: tsCity,
+      //   ),
+      //   actions: [
+      //     IconButton(
+      //       onPressed: () {
+      //         context
+      //             .read<DaysBloc>()
+      //             .add(LoadDaysEvent(context.read<WeatherBloc>().state.city));
+      //         Navigator.pushNamed(
+      //           context,
+      //           DaysScreen.route,
+      //         );
+      //       },
+      //       icon: const Icon(CupertinoIcons.news_solid),
+      //     )
+      //   ],
+      // ),
       body: GestureDetector(
         onVerticalDragEnd: (details) {
           if (details.velocity.pixelsPerSecond.dy > 500) {
@@ -59,7 +66,10 @@ class WeatherScreen extends StatelessWidget {
             context
                 .read<DaysBloc>()
                 .add(LoadDaysEvent(context.read<WeatherBloc>().state.city));
-            Navigator.pushNamed(context, DaysScreen.route,);
+            Navigator.pushNamed(
+              context,
+              DaysScreen.route,
+            );
           } else if (dragEndDetails.primaryVelocity! > 500) {
             Navigator.pushNamed(context, CityScreen.route);
           }
@@ -108,13 +118,19 @@ class WeatherScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         //Дата
-                        Chip(
-                          label: Text(
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.black,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 5),
+                          child: Text(
                             DateFormat.MMMMEEEEd().format(DateTime.now()),
                             style: tsMini.copyWith(color: currentClr),
                           ),
-                          backgroundColor: Colors.black,
                         ),
+
                         Text(
                           state.weather.main,
                           style: tsDefault,
@@ -149,97 +165,34 @@ class WeatherScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 45,
-                        ),
+                        const SizedBox(height: 15),
                         //черный блок
-                        Hero(
-                          tag: 'black',
-                          child: Container(
-                            height: 200,
-                            decoration: const BoxDecoration(
-                              color: Colors.black,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(brDef)),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                //Ветер
-                                Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(
-                                      CupertinoIcons.wind,
-                                      color: currentClr,
-                                      size: 60,
-                                    ),
-                                    Text(
-                                      '${state.weather.wind.toString()}м/с',
-                                      style:
-                                          tsMiniLite.copyWith(color: currentClr),
-                                    ),
-                                    Text('Ветер',
-                                        style:
-                                            tsMini.copyWith(color: currentClr)),
-                                  ],
-                                ),
-                                //Важность
-                                Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(
-                                      CupertinoIcons.drop,
-                                      color: currentClr,
-                                      size: 60,
-                                    ),
-                                    Text(
-                                      '${state.weather.humidity.toInt().toString()}%',
-                                      style:
-                                          tsMiniLite.copyWith(color: currentClr),
-                                    ),
-                                    Text('Влажность',
-                                        style:
-                                            tsMini.copyWith(color: currentClr)),
-                                  ],
-                                ),
-                                //Давление
-                                Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(
-                                      CupertinoIcons.speedometer,
-                                      color: currentClr,
-                                      size: 60,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '${state.weather.pressure.toInt().toString()} ',
-                                          style: tsMiniLite.copyWith(
-                                              color: currentClr),
-                                        ),
-                                        Text(
-                                          'мм\nрт.\nст.',
-                                          style:
-                                              tsMini.copyWith(color: currentClr),
-                                        ),
-                                      ],
-                                    ),
-                                    Text('Давление',
-                                        style:
-                                            tsMini.copyWith(color: currentClr)),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
+                        BlackRockSegment(
+                          color: currentClr,
+                          wind: state.weather.wind,
+                          humidity: state.weather.humidity,
+                          pressure: state.weather.pressure,
+                          vision: state.weather.vision,
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 15),
+                        if (state.weather.weeklyForecast != null) ...[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Weekly forecast',
+                                style: tsDefault.copyWith(fontSize: 20),
+                              ),
+                              const Icon(CupertinoIcons.arrow_right),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          WeeklyForecastListView(
+                            forecast: state.weather.weeklyForecast!,
+                          ),
+                        ],
+
+                        ///end view
                       ],
                     ),
                   ),

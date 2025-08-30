@@ -8,17 +8,18 @@ const _apiKey = '66e25765dcbcbb5a1a38eb7cb620c043';
 class WeatherMapHelper {
   //запрос текущей погоды
   Future<dynamic> getWeather(String city) async {
-    try{
-    var parse = Uri.parse('http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${_apiKey}&units=metric');
-    http.Response response = await http.get(parse);
-    if (response.statusCode == 200) {
-      var body = jsonDecode(response.body);
-      return body;
-    } else {
-      //return Future.error(response.statusCode);
-      throw(response.statusCode);
-    }
-    }catch(e){
+    try {
+      var parse = Uri.parse(
+          'http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${_apiKey}&units=metric&lang=ru');
+      http.Response response = await http.get(parse);
+      if (response.statusCode == 200) {
+        var body = jsonDecode(response.body);
+        return body;
+      } else {
+        //return Future.error(response.statusCode);
+        throw (response.statusCode);
+      }
+    } catch (e) {
       rethrow;
     }
   }
@@ -26,12 +27,12 @@ class WeatherMapHelper {
   //погода на 5 дней через каждые 3 часа
   Future<dynamic> getForecast(String city) async {
     var parse = Uri.parse(
-        'http://api.openweathermap.org/data/2.5/forecast?q=${city}&APPID=${_apiKey}&units=metric');
+        'http://api.openweathermap.org/data/2.5/forecast?q=${city}&APPID=${_apiKey}&units=metric&lang=ru');
     http.Response response = await http.get(parse);
     if (response.statusCode == 200) {
       try {
-      var forecast = jsonDecode(response.body);
-      List<Weather> weathers = [];
+        var forecast = jsonDecode(response.body);
+        List<Weather> weathers = [];
 
         int cnt = forecast['cnt'] ?? 40;
         for (int i = 0; i < cnt; i++) {
@@ -57,12 +58,11 @@ class WeatherMapHelper {
               clouds:
                   int.parse(forecast['list'][i]['clouds']['all'].toString()),
               date: forecast['list'][i]['dt_txt'],
-
             ),
           );
         }
         return weathers;
-      } catch(e) {
+      } catch (e) {
         return Future.error(e);
       }
     }

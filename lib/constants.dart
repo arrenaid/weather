@@ -39,6 +39,11 @@ const TextStyle tsMiniLite = TextStyle(
   //     blurRadius: 8.0,
   //     color: Colors.black87)],
 );
+const TextStyle tsBLackRock = TextStyle(
+  fontFamily: 'Effra',
+  fontWeight: FontWeight.w400,
+  fontSize: 18,
+);
 const TextStyle tsMini = TextStyle(
   fontFamily: 'Effra',
   fontWeight: FontWeight.w600,
@@ -68,3 +73,8 @@ const LinearGradient bdGradient = LinearGradient(
     tileMode: TileMode.mirror,
 );
 const double brDef = 15;
+
+double convertHpaToMRS (double value){
+  ///1 гектопаскаль = 0.75 миллиметра ртутного столба.
+  return (value * 0.75).round().toDouble();
+}

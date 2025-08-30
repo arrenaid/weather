@@ -12,7 +12,7 @@ class CityState extends WeatherState{
   List<Object?> get props => [city];
 }
 class LoadWeatherState extends WeatherState{
-  final Weather weather;
+  final WeatherBase weather;
    const LoadWeatherState(this.weather, String city) : super(city) ;
 
   @override

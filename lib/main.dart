@@ -5,8 +5,14 @@ import 'package:weather/bloc/weather_bloc.dart';
 import 'package:weather/screens/city_screen.dart';
 import 'package:weather/screens/days_screen.dart';
 import 'package:weather/screens/weather_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:weather/service/weatherbit_repository.dart';
 
-void main() {
+Future main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+  final apiKey = dotenv.get('WEATHERBIT_API_KEY');
+  WeatherBitRepository.setApiKey(apiKey);
   runApp(const MyApp());
 }
 

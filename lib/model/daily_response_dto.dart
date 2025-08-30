@@ -1,0 +1,31 @@
+import 'package:json_annotation/json_annotation.dart';
+import 'package:weather/model/daily_data_dto.dart';
+part 'daily_response_dto.g.dart';
+
+@JsonSerializable()
+class DailyResponseDTO {
+  @JsonKey(name: 'city_name')
+  final String city; //	"Moscow"
+  @JsonKey(name: 'country_code')
+  final String countryCode; //	"RU"
+  final List<DailyDataDTO> data; //	(7)[ {…}, {…}, {…}, {…}, {…}, {…}, {…} ]
+  final String lat; //"55.75222"
+  final String lon; //	"37.61556"
+  @JsonKey(name: 'state_code')
+  final String stateCode; //	"48"
+  final String timezone; //	"Europe/Moscow"
+
+  DailyResponseDTO(
+      {required this.city,
+      required this.countryCode,
+      required this.data,
+      required this.lat,
+      required this.lon,
+      required this.stateCode,
+      required this.timezone});
+
+  factory DailyResponseDTO.fromJson(Map<String, dynamic> json) =>
+      _$DailyResponseDTOFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DailyResponseDTOToJson(this);
+}
