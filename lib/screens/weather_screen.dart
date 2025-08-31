@@ -11,6 +11,7 @@ import 'package:weather/model/weather_base.dart';
 import 'package:weather/screens/city_screen.dart';
 import 'package:weather/screens/days_screen.dart';
 
+import '../widgets/arrow_paint.dart';
 import '../widgets/black_rock_segment.dart';
 import '../widgets/weekly_forecast_listview.dart';
 
@@ -183,12 +184,40 @@ class WeatherScreen extends StatelessWidget {
                                 'Weekly forecast',
                                 style: tsDefault.copyWith(fontSize: 20),
                               ),
-                              const Icon(CupertinoIcons.arrow_right),
+                              ArrowButton( execute: () {
+                                context
+                                    .read<WeatherBloc>()
+                                    .add(LoadForecastEvent(state.weather));
+                                //         Navigator.pushNamed(
+                                //           context,
+                                //           DaysScreen.route,
+                                //         );
+                              }),
                             ],
                           ),
                           const SizedBox(height: 10),
                           WeeklyForecastListView(
                             forecast: state.weather.weeklyForecast!,
+                          ),
+                        ] else ...[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Load weekly forecast',
+                                style: tsDefault.copyWith(fontSize: 20),
+                              ),
+
+                              ArrowButton( execute: () {
+                                context
+                                    .read<WeatherBloc>()
+                                    .add(LoadForecastEvent(state.weather));
+                                //         Navigator.pushNamed(
+                                //           context,
+                                //           DaysScreen.route,
+                                //         );
+                              }),
+                            ],
                           ),
                         ],
 
@@ -249,5 +278,22 @@ class WeatherScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class ArrowButton extends StatelessWidget {
+  const ArrowButton({
+    super.key, required this.execute,
+  });
+  final GestureTapCallback execute;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        onPressed: execute,
+        child:CustomPaint(
+          size: const Size(50, 25),
+          painter: ArrowCustomPainter(),
+        ), );
   }
 }

@@ -1,27 +1,40 @@
 part of 'weather_bloc.dart';
 
-abstract class WeatherEvent extends Equatable{
+abstract class WeatherEvent extends Equatable {}
 
-}
-class CityEvent extends WeatherEvent{
+class CityEvent extends WeatherEvent {
   final String city;
+
   CityEvent(this.city);
 
   @override
   List<Object?> get props => [city];
 }
-class LoadWeatherEvent extends WeatherEvent{
+
+class LoadWeatherEvent extends WeatherEvent {
   @override
   List<Object?> get props => [];
 }
-class ErrorEvent extends WeatherEvent{
+
+class ErrorEvent extends WeatherEvent {
   final String message;
 
   ErrorEvent(this.message);
+
   @override
   List<Object?> get props => [message];
 }
-class LoadCitySharedPreferencesEvent extends WeatherEvent{
+
+class LoadCitySharedPreferencesEvent extends WeatherEvent {
   @override
   List<Object?> get props => [];
+}
+
+class LoadForecastEvent extends WeatherEvent {
+  final WeatherBase weather;
+
+  LoadForecastEvent(this.weather) : super();
+
+  @override
+  List<Object?> get props => [weather];
 }

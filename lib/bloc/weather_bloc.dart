@@ -20,6 +20,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   WeatherBloc() : super(CityState('')) {
     on<CityEvent>(_cityChange);
     on<LoadWeatherEvent>(/*_connect*/_connectWeatherBit);
+    on<LoadForecastEvent>(_loadForecast);
     on<ErrorEvent>(_error);
     on<LoadCitySharedPreferencesEvent>(_load);
   }
@@ -53,13 +54,21 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
   _connectWeatherBit(LoadWeatherEvent event, Emitter emit) async {
     try {
-
       WeatherBase? currentWeather = await WeatherBitRepository.getCurrentWeatherInCity(state.city);
 
-      List<WeatherBase>? dailyForecast = await WeatherBitRepository.getDailyForecastInCity(state.city);
-
       _saveCity(state.city);
-      emit(LoadWeatherState(currentWeather!.toUnit(dailyForecast!), state.city));
+      emit(LoadWeatherState(currentWeather!, state.city));
+    }on SocketException catch (e) { emit(ErrorState('SocketException: $e', state.city));
+    }on HttpException catch (e){  emit(ErrorState('HttpException: $e', state.city));
+    }on FormatException catch (e){  emit(ErrorState('FormatException: $e', state.city));
+    } catch (e) {
+      emit(ErrorState(e.toString(), state.city));
+    }
+  }
+  _loadForecast(LoadForecastEvent event,/* WeatherBase current,*/ Emitter emit) async {
+    try {
+      List<WeatherBase>? dailyForecast = await WeatherBitRepository.getDailyForecastInCity(state.city);
+      emit(LoadWeatherState(event.weather.toUnit(dailyForecast!), state.city));
     }on SocketException catch (e) { emit(ErrorState('SocketException: $e', state.city));
     }on HttpException catch (e){  emit(ErrorState('HttpException: $e', state.city));
     }on FormatException catch (e){  emit(ErrorState('FormatException: $e', state.city));
