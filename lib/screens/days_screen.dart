@@ -30,7 +30,7 @@ class DaysScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     title = context.read<WeatherBloc>().state.city;
-    currentClr = colors[Random().nextInt(colors.length)];
+    currentClr = getCurrentColor();
     List<Color> clrs = [];
     clrs.addAll(colors);
     clrs.remove(currentClr);
@@ -230,7 +230,7 @@ class DaysScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  LoadImage(icon: weather.icon),
+                  LoadImage(iconName: weather.icon),
                   Column(
                     children: [
                       Text(

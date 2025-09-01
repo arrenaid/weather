@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:weather/widgets/load_image.dart';
 import '../constants.dart';
 import '../model/weather_base.dart';
 
@@ -34,12 +35,13 @@ class WeeklyForecastListView extends StatelessWidget {
                       '${forecast[index].temp.round()}°',
                       style: tsDefault,
                     ),
-                    const Image(
-                      image: AssetImage('assets/images/weather.png'),
-                      height: 30,
-                      width: 30,
-                      color: Colors.black,
-                    ),
+                    LoadImage(iconName: forecast[index].icon, isBit: true,height: 30,),
+                    // const Image(
+                    //   image: AssetImage('assets/images/weather.png'),
+                    //   height: 30,
+                    //   width: 30,
+                    //   color: Colors.black,
+                    // ),
                     Text(
               DateFormat.MMMd().format(DateFormat("yyyy-MM-dd").parse(forecast[index].date)),
                       style: tsDefault.copyWith(fontSize: 18),

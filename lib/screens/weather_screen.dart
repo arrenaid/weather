@@ -10,7 +10,9 @@ import 'package:weather/constants.dart';
 import 'package:weather/model/weather_base.dart';
 import 'package:weather/screens/city_screen.dart';
 import 'package:weather/screens/days_screen.dart';
+import 'package:weather/screens/forecast_screen.dart';
 
+import '../widgets/arrow_button.dart';
 import '../widgets/arrow_paint.dart';
 import '../widgets/black_rock_segment.dart';
 import '../widgets/weekly_forecast_listview.dart';
@@ -22,40 +24,9 @@ class WeatherScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color currentClr = colors[Random().nextInt(colors.length)];
-    //colors.remove(currentClr);
+    Color currentClr = getCurrentColor();
     return Scaffold(
       backgroundColor: currentClr,
-      // appBar: AppBar(
-      //   flexibleSpace: Hero(
-      //     tag: 'up',
-      //     child: Container(
-      //       decoration: const BoxDecoration(gradient: bdGradient),
-      //     ),
-      //   ),
-      //   leading: IconButton(
-      //     onPressed: () => Navigator.pushNamed(context, CityScreen.route),
-      //     icon: const Icon(CupertinoIcons.t_bubble_fill), //cloud_moon_rain_fill
-      //   ),
-      //   title: const Text(
-      //     'Погода',
-      //     style: tsCity,
-      //   ),
-      //   actions: [
-      //     IconButton(
-      //       onPressed: () {
-      //         context
-      //             .read<DaysBloc>()
-      //             .add(LoadDaysEvent(context.read<WeatherBloc>().state.city));
-      //         Navigator.pushNamed(
-      //           context,
-      //           DaysScreen.route,
-      //         );
-      //       },
-      //       icon: const Icon(CupertinoIcons.news_solid),
-      //     )
-      //   ],
-      // ),
       body: GestureDetector(
         onVerticalDragEnd: (details) {
           if (details.velocity.pixelsPerSecond.dy > 500) {
@@ -104,7 +75,6 @@ class WeatherScreen extends StatelessWidget {
               if (state is LoadWeatherState) {
                 iconName = state.weather.icon;
                 return SingleChildScrollView(
-                  //что бы избежать проблем на узких экранах
                   scrollDirection: Axis.vertical,
                   physics: const BouncingScrollPhysics(),
                   child: Padding(
@@ -112,11 +82,29 @@ class WeatherScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         const SizedBox(height: 10),
-                        //city
-                        Text(
-                          state.weather.city.toUpperCase(),
-                          style: tsTitleBolt,
-                          textAlign: TextAlign.center,
+
+                        ///city
+                        Stack(
+                          children: [
+                            Align(
+                              alignment: const FractionalOffset(0, 0.5),
+                              child: ArrowButton(
+                                width: 30,
+                                height: 30,
+                                isNotArrow: true,
+                                execute: () => Navigator.pushNamed(
+                                    context, CityScreen.route),
+                              ),
+                            ),
+                            Align(
+                              alignment: const FractionalOffset(0.5, 0.5),
+                              child: Text(
+                                state.weather.city.toUpperCase(),
+                                style: tsTitleBolt,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
                         ),
                         //Дата
                         Container(
@@ -184,15 +172,12 @@ class WeatherScreen extends StatelessWidget {
                                 'Weekly forecast',
                                 style: tsDefault.copyWith(fontSize: 20),
                               ),
-                              ArrowButton( execute: () {
-                                context
-                                    .read<WeatherBloc>()
-                                    .add(LoadForecastEvent(state.weather));
-                                //         Navigator.pushNamed(
-                                //           context,
-                                //           DaysScreen.route,
-                                //         );
-                              }),
+                              ArrowButton(
+                                execute: () => Navigator.pushNamed(
+                                  context,
+                                  ForecastScreen.route,
+                                ),
+                              ),
                             ],
                           ),
                           const SizedBox(height: 10),
@@ -207,8 +192,7 @@ class WeatherScreen extends StatelessWidget {
                                 'Load weekly forecast',
                                 style: tsDefault.copyWith(fontSize: 20),
                               ),
-
-                              ArrowButton( execute: () {
+                              ArrowButton(execute: () {
                                 context
                                     .read<WeatherBloc>()
                                     .add(LoadForecastEvent(state.weather));
@@ -278,22 +262,5 @@ class WeatherScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class ArrowButton extends StatelessWidget {
-  const ArrowButton({
-    super.key, required this.execute,
-  });
-  final GestureTapCallback execute;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-        onPressed: execute,
-        child:CustomPaint(
-          size: const Size(50, 25),
-          painter: ArrowCustomPainter(),
-        ), );
   }
 }

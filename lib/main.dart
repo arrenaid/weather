@@ -4,6 +4,7 @@ import 'package:weather/bloc/days_bloc.dart';
 import 'package:weather/bloc/weather_bloc.dart';
 import 'package:weather/screens/city_screen.dart';
 import 'package:weather/screens/days_screen.dart';
+import 'package:weather/screens/forecast_screen.dart';
 import 'package:weather/screens/weather_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:weather/service/weatherbit_repository.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
               CityScreen.route: (context) => const CityScreen(),
               WeatherScreen.route: (context) =>  WeatherScreen(),
               DaysScreen.route: (context) => DaysScreen(),
+              ForecastScreen.route: (context) => ForecastScreen(),
             });
       }),
     );

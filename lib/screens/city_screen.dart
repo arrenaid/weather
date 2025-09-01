@@ -21,7 +21,7 @@ class _CityScreenState extends State<CityScreen> {
   @override
   void initState() {
     var colors = [clr1, clr2, clr3, clr4];
-    currentClr = colors[Random().nextInt(colors.length)];
+    currentClr = getCurrentColor();
     _controller.addListener(() {});
     super.initState();
   }

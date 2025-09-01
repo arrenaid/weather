@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 const TextStyle tsBigTemp = TextStyle(
   fontFamily: 'Effra',
@@ -39,6 +41,12 @@ const TextStyle tsMiniLite = TextStyle(
   //     blurRadius: 8.0,
   //     color: Colors.black87)],
 );
+const TextStyle tsForecast = TextStyle(
+  fontFamily: 'Effra',
+  fontWeight: FontWeight.w400,
+  fontSize: 16,
+  color: Colors.black,
+);
 const TextStyle tsBLackRock = TextStyle(
   fontFamily: 'Effra',
   fontWeight: FontWeight.w400,
@@ -77,4 +85,8 @@ const double brDef = 15;
 double convertHpaToMRS (double value){
   ///1 гектопаскаль = 0.75 миллиметра ртутного столба.
   return (value * 0.75).round().toDouble();
+}
+
+Color getCurrentColor(){
+  return colors[Random().nextInt(colors.length)];
 }
