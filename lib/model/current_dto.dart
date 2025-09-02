@@ -1,12 +1,15 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:weather/model/daily_weather_dto.dart';
+
 part 'current_dto.g.dart';
 
 @JsonSerializable()
 class CurrentDTO {
   @JsonKey(name: 'app_temp')
   final double appTemp; //	19.3
-  final double aqi; ///	87 Индекс качества воздуха
+  final double aqi;
+
+  ///	87 Индекс качества воздуха
   @JsonKey(name: 'city_name')
   final String city; //	"Moscow"
   final double clouds; //	0
@@ -17,11 +20,19 @@ class CurrentDTO {
   final double dhi; //	0
   final double dni; //	0
   @JsonKey(name: 'elev_angle')
-  final double elevAngle; ///	-22.9 Угол возвышения солнца
-  final double ghi; ///	0 ghi (0), dni (0), dhi (0) — Показатели солнечной радиации: Все равны 0 (ночь).
-  final double gust; ///	4.4 gust (4.4 м/с) — Порывы ветра: Максимальная скорость кратковременных порывов.
+  final double elevAngle;
+
+  ///	-22.9 Угол возвышения солнца
+  final double ghi;
+
+  ///	0 ghi (0), dni (0), dhi (0) — Показатели солнечной радиации: Все равны 0 (ночь).
+  final double gust;
+
+  ///	4.4 gust (4.4 м/с) — Порывы ветра: Максимальная скорость кратковременных порывов.
   @JsonKey(name: 'h_angle')
-  final double hAngle; ///	-90 гол азимута солнца
+  final double hAngle;
+
+  ///	-90 гол азимута солнца
   final double lat; //	55.75222
   final double lon; //	37.61556
   @JsonKey(name: 'ob_time')
@@ -56,45 +67,46 @@ class CurrentDTO {
   @JsonKey(name: 'wind_spd')
   final double wind; //	1.8
 
-  CurrentDTO(
-      {required this.appTemp,
-      required this.aqi,
-      required this.city,
-      required this.clouds,
-      required this.countryCode,
-      required this.datetime,
-      required this.dewpt,
-      required this.dhi,
-      required this.dni,
-      required this.elevAngle,
-      required this.ghi,
-      required this.gust,
-      required this.hAngle,
-      required this.lat,
-      required this.lon,
-      required this.time,
-      required this.pod,
-      required this.precip,
-      required this.pres,
-      required this.rh,
-      required this.slp,
-      required this.snow,
-      required this.solarRad,
-      required this.sources,
-      required this.stateCode,
-      required this.station,
-      required this.sunrise,
-      required this.sunset,
-      required this.temp,
-      required this.timezone,
-      required this.ts,
-      required this.uv,
-      required this.vis,
-      required this.weather,
-      required this.windCDir,
-      required this.windCDirFull,
-      required this.windDir,
-      required this.wind});
+  CurrentDTO({
+    required this.appTemp,
+    required this.aqi,
+    required this.city,
+    required this.clouds,
+    required this.countryCode,
+    required this.datetime,
+    required this.dewpt,
+    required this.dhi,
+    required this.dni,
+    required this.elevAngle,
+    required this.ghi,
+    required this.gust,
+    required this.hAngle,
+    required this.lat,
+    required this.lon,
+    required this.time,
+    required this.pod,
+    required this.precip,
+    required this.pres,
+    required this.rh,
+    required this.slp,
+    required this.snow,
+    required this.solarRad,
+    required this.sources,
+    required this.stateCode,
+    required this.station,
+    required this.sunrise,
+    required this.sunset,
+    required this.temp,
+    required this.timezone,
+    required this.ts,
+    required this.uv,
+    required this.vis,
+    required this.weather,
+    required this.windCDir,
+    required this.windCDirFull,
+    required this.windDir,
+    required this.wind,
+  });
 
   factory CurrentDTO.fromJson(Map<String, dynamic> json) =>
       _$CurrentDTOFromJson(json);

@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,30 +6,28 @@ import 'package:intl/intl.dart';
 import 'package:weather/bloc/days_bloc.dart';
 import 'package:weather/bloc/weather_bloc.dart';
 import 'package:weather/constants.dart';
-import 'package:weather/model/weather_base.dart';
 import 'package:weather/screens/city_screen.dart';
 import 'package:weather/screens/days_screen.dart';
 import 'package:weather/screens/forecast_screen.dart';
-
 import '../widgets/arrow_button.dart';
-import '../widgets/arrow_paint.dart';
 import '../widgets/black_rock_segment.dart';
 import '../widgets/weekly_forecast_listview.dart';
 
 class WeatherScreen extends StatelessWidget {
-  WeatherScreen({Key? key}) : super(key: key);
+  const WeatherScreen({Key? key}) : super(key: key);
   static const String route = 'weather';
-  String iconName = '';
+  static final GlobalKey globalKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     Color currentClr = getCurrentColor();
     return Scaffold(
+      key: WeatherScreen.globalKey,
       backgroundColor: currentClr,
       body: GestureDetector(
         onVerticalDragEnd: (details) {
           if (details.velocity.pixelsPerSecond.dy > 500) {
-            context.read<WeatherBloc>().add(LoadWeatherEvent());
+            context.read<WeatherBloc>().add(LoadWeatherEvent(context));
           }
         },
         onHorizontalDragEnd: (dragEndDetails) {
@@ -73,7 +70,6 @@ class WeatherScreen extends StatelessWidget {
             },
             builder: (buildContext, state) {
               if (state is LoadWeatherState) {
-                iconName = state.weather.icon;
                 return SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   physics: const BouncingScrollPhysics(),
@@ -92,8 +88,7 @@ class WeatherScreen extends StatelessWidget {
                                 width: 30,
                                 height: 30,
                                 isNotArrow: true,
-                                execute: () => Navigator.pushNamed(
-                                    context, CityScreen.route),
+                                execute: () => Navigator.pushNamed(context, CityScreen.route),
                               ),
                             ),
                             Align(
@@ -193,9 +188,8 @@ class WeatherScreen extends StatelessWidget {
                                 style: tsDefault.copyWith(fontSize: 20),
                               ),
                               ArrowButton(execute: () {
-                                context
-                                    .read<WeatherBloc>()
-                                    .add(LoadForecastEvent(state.weather));
+                                context.read<WeatherBloc>().add(
+                                    LoadForecastEvent(state.weather, context));
                                 //         Navigator.pushNamed(
                                 //           context,
                                 //           DaysScreen.route,
@@ -245,7 +239,7 @@ class WeatherScreen extends StatelessWidget {
                 );
               }
               if (state is CityState) {
-                context.read<WeatherBloc>().add(LoadWeatherEvent());
+                context.read<WeatherBloc>().add(LoadWeatherEvent(context));
                 return const Center(
                   child: CircularProgressIndicator(
                     color: Colors.white,

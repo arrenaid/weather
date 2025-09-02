@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +19,6 @@ class _CityScreenState extends State<CityScreen> {
 
   @override
   void initState() {
-    var colors = [clr1, clr2, clr3, clr4];
     currentClr = getCurrentColor();
     _controller.addListener(() {});
     super.initState();
@@ -133,7 +131,7 @@ class _CityScreenState extends State<CityScreen> {
                           duration: const Duration(seconds: 1),
                           curve: Curves.fastOutSlowIn,
                           onEnd: () {
-                            context.read<WeatherBloc>().add(LoadWeatherEvent());
+                            context.read<WeatherBloc>().add(LoadWeatherEvent(context));
                             Navigator.pushReplacementNamed(
                                 context, WeatherScreen.route);
                           },

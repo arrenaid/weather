@@ -103,7 +103,7 @@ class BlackRockSegment extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '$vision m',
+                      '$vision км',
                       style: tsBLackRock.copyWith(color: color),
                     ),
                   ],
