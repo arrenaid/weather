@@ -202,11 +202,46 @@ class WeatherScreen extends StatelessWidget {
                             ],
                           ),
                         ],
+                        const SizedBox(height: 15),
+                        CloudPerSnowSector(
+                          clouds: state.weather.clouds.toDouble(),
+                          precipitation: state.weather.precipitation!,
+                          snow: state.weather.snow!,
+                          dewPoint: state.weather.dewPoint,
+                          chanceOfPrecipitation: state.weather.chanceOfPrecipitation,
+                          ozone: state.weather.ozone,
+                          snowDepth: state.weather.snowDepth,
+                        ),
+                        const SizedBox(height: 15),
+                        const SizedBox(height: 15),
+                        Text.rich(
+                          textAlign: TextAlign.center,
+                          TextSpan(
+                              text: '${state.weather.airQualityIndex!.round()}',
+                              style: tsBigTemp.copyWith(
+                                  fontSize: 40),
+                              children: [
+                                TextSpan(
+                                    text: ' индекс качества воздуха',
+                                    style: tsForecast),
+                              ]),
 
+                        ),
+                        ///wind
+                        WindSector(
+                          color: currentClr,
+                          speed: state.weather.wind,
+                          gusts: state.weather.windGusts!,
+                          direction: state.weather.windDirection!,
+                          directionShort: state.weather.windDirShort!,
+                          directionFull: state.weather.windDirFull!,
+                        ),
+                        const SizedBox(height: 10),
                         if ((state.weather.sunRise != null) &&
                             (state.weather.sunSet != null)) ...[
                           const SizedBox(height: 10),
                           Container(
+                            padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
                               border:
@@ -214,27 +249,62 @@ class WeatherScreen extends StatelessWidget {
                             ),
                             child: Row(
                               children: [
-                                Text(
-                                  'Восход ${state.weather.sunRise}',
-                                  style: tsDefault.copyWith(fontSize: 20),
+                                Column(
+                                  children: [
+                                    Text(
+                                      'uv index ${state.weather.uvIndex}',
+                                      style: tsDefault.copyWith(fontSize: 20),
+                                    ),
+                                    Text(
+                                      'угол \nвозвышения ${state.weather.angleSunAzimuth}',
+                                      style: tsDefault.copyWith(fontSize: 20),
+                                    ),
+                                    Text(
+                                      'aзимут ${state.weather.angleSunAzimuth}',
+                                      style: tsDefault.copyWith(fontSize: 20),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  'Закат ${state.weather.sunSet}',
-                                  style: tsDefault.copyWith(fontSize: 20),
+                                Column(
+                                  children: [
+                                    Text(
+                                      'Восход ${state.weather.sunRise}',
+                                      style: tsDefault.copyWith(fontSize: 20),
+                                    ),
+                                    Text(
+                                      'Закат ${state.weather.sunSet}',
+                                      style: tsDefault.copyWith(fontSize: 20),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
                         ],
                         const SizedBox(height: 10),
-                        WindSector(
-                            color: currentClr,
-                          speed: state.weather.wind,
-                          gusts: state.weather.windGusts!,
-                          direction: state.weather.windDirection!,
-                          directionShort: state.weather.windDirShort!,
-                          directionFull: state.weather.windDirFull!,
-                        ),
+
+                        Container(
+                            padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Восход луны ${state.weather.moonRise}',
+                                  style: tsDefault.copyWith(color: currentClr),
+                                ),
+                                Text(
+                                  'Закат луны ${state.weather.moonSet}',
+                                  style: tsDefault.copyWith(color: currentClr),
+                                ),
+                                Text(
+                                  'Фаза луны ${state.weather.moonPhase}',
+                                  style: tsDefault.copyWith(color: currentClr),
+                                ),
+                              ],
+                            )),
 
                         const SizedBox(height: 20),
 
@@ -293,6 +363,167 @@ class WeatherScreen extends StatelessWidget {
             },
           ),
         ),
+      ),
+    );
+  }
+}
+
+class CloudPerSnowSector extends StatelessWidget {
+  const CloudPerSnowSector({
+    super.key,
+    required this.clouds,
+    this.ozone,
+    required this.precipitation,
+    required this.snow,
+    this.snowDepth,
+    this.chanceOfPrecipitation,
+    this.dewPoint,
+  });
+
+  final double clouds;
+  final double? ozone;
+  final double precipitation;
+  final double snow;
+  final double? snowDepth;
+  final double? chanceOfPrecipitation;
+  final double? dewPoint;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.sizeOf(context).width - 60,
+      decoration: BoxDecoration(
+        border: Border.all(width: 2.5, color: Colors.black),
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 2.5, color: Colors.white),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Text.rich(
+                    textAlign: TextAlign.center,
+                    TextSpan(
+                        text: '${clouds.round()}',
+                        style: tsBigTemp.copyWith(fontSize: 40),
+                        children: const [
+                          TextSpan(text: '%\nОблочность', style: tsForecast),
+                        ]),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 2.5, color: Colors.white),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Text.rich(
+                    textAlign: TextAlign.center,
+                    TextSpan(
+                        text: '${ozone}',
+                        style: tsBigTemp.copyWith(fontSize: 40),
+                        children: [
+                          TextSpan(text: '\nозон', style: tsForecast),
+                        ]),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 2.5, color: Colors.white),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Text.rich(
+                    textAlign: TextAlign.center,
+                    TextSpan(
+                        text: '${dewPoint!.round()}',
+                        style: tsBigTemp.copyWith(fontSize: 40),
+                        children: [
+                          TextSpan(text: '°C\nТочка росы', style: tsForecast),
+                        ]),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              border: Border.all(width: 2.5, color: Colors.white),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text.rich(
+                  textAlign: TextAlign.center,
+                  TextSpan(
+                      text: '${chanceOfPrecipitation}',
+                      style: tsBigTemp.copyWith(fontSize: 40),
+                      children: [
+                        TextSpan(
+                            text: '%\nВероятность\nосадков\n',
+                            style: tsForecast),
+                      ]),
+                ),
+                Text.rich(
+                  textAlign: TextAlign.center,
+                  TextSpan(
+                      text: '${precipitation}',
+                      style: tsBigTemp.copyWith(fontSize: 40),
+                      children: [
+                        TextSpan(
+                            text: 'мм\nОбьем\nосадков\n', style: tsForecast),
+                      ]),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              border: Border.all(width: 2.5, color: Colors.white),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text.rich(
+                  textAlign: TextAlign.center,
+                  TextSpan(
+                      text: '${snow.round()}',
+                      style: tsBigTemp.copyWith(fontSize: 40),
+                      children: [
+                        TextSpan(text: 'мм\nCнег', style: tsForecast),
+                      ]),
+                ),
+                Text.rich(
+                  textAlign: TextAlign.center,
+                  TextSpan(
+                      text: '${snowDepth?.round()}',
+                      style: tsBigTemp.copyWith(fontSize: 40),
+                      children: [
+                        TextSpan(
+                            text: 'мм\nВысота\nснежного\nпокрова',
+                            style: tsForecast),
+                      ]),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
