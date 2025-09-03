@@ -83,6 +83,38 @@ class WindSector extends StatelessWidget {
                             color: color, letterSpacing: -5, fontSize: 40),
                       ),
                     ),
+                    Align(
+                      alignment: const FractionalOffset(0.5, 0.1),
+                      child: Text(
+                        'N',
+                        style: tsLite.copyWith(
+                            color: color, fontSize: 15),
+                      ),
+                    ),
+                    Align(
+                      alignment: const FractionalOffset(0.5, 0.9),
+                      child: Text(
+                        'S',
+                        style: tsLite.copyWith(
+                            color: color, fontSize: 15),
+                      ),
+                    ),
+                    Align(
+                      alignment: const FractionalOffset(0.1, 0.5),
+                      child: Text(
+                        'W',
+                        style: tsLite.copyWith(
+                            color: color, fontSize: 15),
+                      ),
+                    ),
+                    Align(
+                      alignment: const FractionalOffset(0.9, 0.5),
+                      child: Text(
+                        'E',
+                        style: tsLite.copyWith(
+                            color: color, fontSize: 15),
+                      ),
+                    ),
                     CustomPaint(
                       size: const Size(200, 200),
                       painter: WindDirectionCustomPainter(color: color),
