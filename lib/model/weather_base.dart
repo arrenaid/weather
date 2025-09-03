@@ -36,6 +36,7 @@ class WeatherBase implements Weather {
 
   late final double wind;
   late final double? windDirection;
+  late final String? windDirShort;
   late final String? windDirFull;
   late final double? airQualityIndex;
   late final double? windGusts;
@@ -74,6 +75,7 @@ class WeatherBase implements Weather {
     this.ozone,
     required this.wind,
     this.windDirection,
+    this.windDirShort,
     this.windDirFull,
     this.airQualityIndex,
     this.windGusts,
@@ -112,6 +114,7 @@ class WeatherBase implements Weather {
     required this.ozone,
     required this.wind,
     required this.windDirection,
+    required this.windDirShort,
     required this.windDirFull,
     required this.airQualityIndex,
     required this.windGusts,

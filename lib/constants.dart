@@ -90,3 +90,6 @@ double convertHpaToMRS (double value){
 Color getCurrentColor(){
   return colors[Random().nextInt(colors.length)];
 }
+double degreeToRadian(double degree){
+  return degree * (pi / 180);
+}

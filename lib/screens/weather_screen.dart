@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:weather/screens/forecast_screen.dart';
 import '../widgets/arrow_button.dart';
 import '../widgets/black_rock_segment.dart';
 import '../widgets/weekly_forecast_listview.dart';
+import '../widgets/wind_sector.dart';
 
 class WeatherScreen extends StatelessWidget {
   const WeatherScreen({Key? key}) : super(key: key);
@@ -88,7 +91,8 @@ class WeatherScreen extends StatelessWidget {
                                 width: 30,
                                 height: 30,
                                 isNotArrow: true,
-                                execute: () => Navigator.pushNamed(context, CityScreen.route),
+                                execute: () => Navigator.pushNamed(
+                                    context, CityScreen.route),
                               ),
                             ),
                             Align(
@@ -198,6 +202,41 @@ class WeatherScreen extends StatelessWidget {
                             ],
                           ),
                         ],
+
+                        if ((state.weather.sunRise != null) &&
+                            (state.weather.sunSet != null)) ...[
+                          const SizedBox(height: 10),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border:
+                                  Border.all(width: 2.5, color: Colors.black),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'Восход ${state.weather.sunRise}',
+                                  style: tsDefault.copyWith(fontSize: 20),
+                                ),
+                                Text(
+                                  'Закат ${state.weather.sunSet}',
+                                  style: tsDefault.copyWith(fontSize: 20),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: 10),
+                        WindSector(
+                            color: currentClr,
+                          speed: state.weather.wind,
+                          gusts: state.weather.windGusts!,
+                          direction: state.weather.windDirection!,
+                          directionShort: state.weather.windDirShort!,
+                          directionFull: state.weather.windDirFull!,
+                        ),
+
+                        const SizedBox(height: 20),
 
                         ///end view
                       ],

@@ -33,6 +33,7 @@ extension DailyResponseDtoToDomain on CurrentDTO {
       windGusts: gust,
       angleElevationSun: elevAngle,
       angleSunAzimuth: hAngle,
+      windDirShort: windCDir
     );
   }
 }
