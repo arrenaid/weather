@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 const TextStyle tsBigTemp = TextStyle(
   fontFamily: 'Effra',
   fontWeight: FontWeight.w600,
@@ -92,4 +93,30 @@ Color getCurrentColor(){
 }
 double degreeToRadian(double degree){
   return degree * (pi / 180);
+}
+String getDayTime(String rise, String set){
+  
+  var sr = DateFormat("hh:mm").parse(rise);
+  var ss = DateFormat("hh:mm").parse(set);
+  final Duration difference =  sr.difference(ss) ;
+  debugPrint(difference.toString());
+  var result = DateFormat.Hm().format(DateTime(sr.year).add(difference));
+  debugPrint(result);
+  return result;
+  // DateTime sunRise = DateTime.parse(rise);
+  // DateTime sunSet = DateTime.parse(set);
+  // var day = sunRise.difference(sunSet);
+  // debugPrint(day.toString());
+  // return  day.toString();
+  //DateFormat.Hm().format(DateFormat("hh:mm").parse(day.toString()));
+  // DateFormat.Hm()
+  //     .format(DateFormat("hh:mm").parse(state.weather.sunSet!).difference(DateFormat("hh:mm").parse(state.weather.sunRise!)) as DateTime),
+}
+String getNightTime(String rise, String set){
+  var sunRise = DateFormat("hh:mm").parse(rise);
+  var sunSet = DateFormat("hh:mm").parse(set);
+  final Duration difference =  sunSet.difference(sunRise) ;
+  var result = DateFormat.Hm().format(DateTime(sunRise.year).add(difference));
+  debugPrint(result);
+  return result;
 }
