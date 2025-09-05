@@ -1,5 +1,3 @@
-import 'package:weather/model/weather.dart';
-
 class WeatherBase {
   late final double temperature;
   late final double feelsTemp;
@@ -14,7 +12,7 @@ class WeatherBase {
   late final String? sunSet;
   late final double? uvIndex;
   late final double? angleElevationSun;
-  late final double? angleSunAzimuth;
+  late final double? angleHorlySun;
 
   ///moon
   late final String? moonRise;
@@ -64,7 +62,7 @@ class WeatherBase {
     this.sunSet,
     this.uvIndex,
     this.angleElevationSun,
-    this.angleSunAzimuth,
+    this.angleHorlySun,
     this.moonRise,
     this.moonSet,
     this.moonPhase,
@@ -103,7 +101,7 @@ class WeatherBase {
     required this.sunSet,
     required this.uvIndex,
     required this.angleElevationSun,
-    required this.angleSunAzimuth,
+    required this.angleHorlySun,
     required this.moonRise,
     required this.moonSet,
     required this.moonPhase,

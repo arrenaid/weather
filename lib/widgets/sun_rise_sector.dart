@@ -98,18 +98,18 @@ class SunRiseSector extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Icon(
-                    CupertinoIcons.moon_fill,
-                    size: 40,
-                    color: color,
+                  Text(
+                    getLocalTime(time: sunSet!, zone: timeZone!),
+                    style: tsDefault.copyWith(color: color),
                   ),
                   Text(
                     'Закат',
                     style: tsLite.copyWith(fontSize: 20, color: color),
                   ),
-                  Text(
-                    getLocalTime(time: sunSet!, zone: timeZone!),
-                    style: tsDefault.copyWith(color: color),
+                  Icon(
+                    CupertinoIcons.moon_fill,
+                    size: 40,
+                    color: color,
                   ),
                 ],
               ),

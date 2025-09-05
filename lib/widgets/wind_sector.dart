@@ -41,7 +41,8 @@ class WindSector extends StatelessWidget {
                 children: [
                   Text(
                     speed.round().toString(),
-                    style: tsBigTemp.copyWith(color: color, fontSize: 60),
+                    style: tsBigTemp.copyWith(
+                        color: color, fontSize: 60, letterSpacing: -4),
                   ),
                   Text(
                     'м/с\nВетер',
@@ -58,7 +59,11 @@ class WindSector extends StatelessWidget {
                 children: [
                   Text(
                     gusts.round().toString(),
-                    style: tsBigTemp.copyWith(color: color, fontSize: 60),
+                    style: tsBigTemp.copyWith(
+                      color: color,
+                      fontSize: 60,
+                      letterSpacing: -4,
+                    ),
                   ),
                   Text(
                     'м/с\nПорывы',
@@ -88,32 +93,28 @@ class WindSector extends StatelessWidget {
                       alignment: const FractionalOffset(0.5, 0.1),
                       child: Text(
                         'N',
-                        style: tsLite.copyWith(
-                            color: color, fontSize: 15),
+                        style: tsLite.copyWith(color: color, fontSize: 15),
                       ),
                     ),
                     Align(
                       alignment: const FractionalOffset(0.5, 0.9),
                       child: Text(
                         'S',
-                        style: tsLite.copyWith(
-                            color: color, fontSize: 15),
+                        style: tsLite.copyWith(color: color, fontSize: 15),
                       ),
                     ),
                     Align(
                       alignment: const FractionalOffset(0.1, 0.5),
                       child: Text(
                         'W',
-                        style: tsLite.copyWith(
-                            color: color, fontSize: 15),
+                        style: tsLite.copyWith(color: color, fontSize: 15),
                       ),
                     ),
                     Align(
                       alignment: const FractionalOffset(0.9, 0.5),
                       child: Text(
                         'E',
-                        style: tsLite.copyWith(
-                            color: color, fontSize: 15),
+                        style: tsLite.copyWith(color: color, fontSize: 15),
                       ),
                     ),
                     CustomPaint(

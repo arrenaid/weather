@@ -47,7 +47,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   }
 
   ///old
-  _connect(LoadWeatherEvent event, Emitter emit) async {
+    _connect(LoadWeatherEvent event, Emitter emit) async {
     try {
       dynamic map = await client.getWeather(state.city);
       Weather weather = Weather.fromJson(map);

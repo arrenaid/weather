@@ -175,86 +175,85 @@ class AirIndexScaleCustomPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-
-    double green = size.width/10;
-    double yellow = green *2;
-    double orange = green * 3;
-    double red = green * 4;
-    double purple = green * 6;
+    double greenX = size.width / 10;
+    double yellowX = greenX * 2;
+    double orangeX = greenX * 3;
+    double redX = greenX * 4;
+    double purpleX = greenX * 6;
     double stroke = 0;
     double radius = 0;
 
     final greenLevel = Paint();
-    greenLevel.color = Colors.lightGreenAccent;
+    greenLevel.color = Colors.green[600]!;
     greenLevel.style = PaintingStyle.stroke;
     greenLevel.strokeCap = StrokeCap.round;
     greenLevel.strokeWidth = 3;
     canvas.drawLine(
       Offset(0, size.height / 2),
-      Offset(green - stroke -radius, size.height / 2),
+      Offset(greenX - stroke - radius, size.height / 2),
       greenLevel,
     );
     final yellowLevel = Paint();
-    yellowLevel.color = Colors.yellowAccent;
+    yellowLevel.color = Colors.amber[600]!;
     yellowLevel.style = PaintingStyle.stroke;
     yellowLevel.strokeCap = StrokeCap.round;
     yellowLevel.strokeWidth = 5;
     canvas.drawLine(
-      Offset(green + stroke + radius, size.height / 2),
-      Offset(yellow - stroke - radius, size.height / 2),
+      Offset(greenX + stroke + radius, size.height / 2),
+      Offset(yellowX - stroke - radius, size.height / 2),
       yellowLevel,
     );
     final orangeLevel = Paint();
-    orangeLevel.color = Colors.orangeAccent;
+    orangeLevel.color = Colors.orange[600]!;
     orangeLevel.style = PaintingStyle.stroke;
     orangeLevel.strokeCap = StrokeCap.round;
     orangeLevel.strokeWidth = 7;
     canvas.drawLine(
-      Offset(yellow + stroke+radius, size.height / 2),
-      Offset(orange - stroke-radius, size.height / 2),
+      Offset(yellowX + stroke + radius, size.height / 2),
+      Offset(orangeX - stroke - radius, size.height / 2),
       orangeLevel,
     );
     final redLevel = Paint();
-    redLevel.color = Colors.redAccent;
+    redLevel.color = Colors.red[600]!;
     redLevel.style = PaintingStyle.stroke;
     redLevel.strokeCap = StrokeCap.round;
     redLevel.strokeWidth = 9;
     canvas.drawLine(
-      Offset(orange + stroke+ radius, size.height / 2),
-      Offset(red - stroke-radius, size.height / 2),
+      Offset(orangeX + stroke + radius, size.height / 2),
+      Offset(redX - stroke - radius, size.height / 2),
       redLevel,
     );
 
     final purpleLevel = Paint();
-    purpleLevel.color = Colors.purpleAccent;
+    purpleLevel.color = Colors.deepPurple[600]!;
     purpleLevel.style = PaintingStyle.stroke;
     purpleLevel.strokeCap = StrokeCap.round;
     purpleLevel.strokeWidth = 11;
     canvas.drawLine(
-      Offset(red + stroke+radius, size.height / 2),
-      Offset(purple - stroke-radius, size.height / 2),
+      Offset(redX + stroke + radius, size.height / 2),
+      Offset(purpleX - stroke - radius, size.height / 2),
       purpleLevel,
     );
 
     final brownLevel = Paint();
-    brownLevel.color = Colors.brown;
+    brownLevel.color = Colors.brown[600]!;
     brownLevel.style = PaintingStyle.stroke;
     brownLevel.strokeCap = StrokeCap.round;
     brownLevel.strokeWidth = 13;
     canvas.drawLine(
-      Offset(purple + stroke+radius, size.height / 2),
-      Offset(size.width - stroke-radius, size.height / 2),
+      Offset(purpleX + stroke + radius, size.height / 2),
+      Offset(size.width - stroke - radius, size.height / 2),
       brownLevel,
     );
     final paintCircle = Paint();
     paintCircle.color = color;
     paintCircle.style = PaintingStyle.fill;
 
-    // canvas.drawCircle(Offset(green, size.height / 2), 2, paintCircle);
-    // canvas.drawCircle(Offset(yellow, size.height / 2),2, paintCircle);
-    // canvas.drawCircle(Offset(orange, size.height / 2),2, paintCircle);
-    // canvas.drawCircle(Offset(red, size.height / 2), 2.5, paintCircle);
-    // canvas.drawCircle(Offset(purple, size.height / 2), 3, paintCircle);
+    // canvas.drawCircle(Offset(greenX, size.height / 2), 2, paintCircle);
+    // canvas.drawCircle(Offset(yellowX, size.height / 2),2, paintCircle);
+    // canvas.drawCircle(Offset(orangeX, size.height / 2),2, paintCircle);
+    // canvas.drawCircle(Offset(redX, size.height / 2), 2.5, paintCircle);
+    // canvas.drawCircle(Offset(purpleX, size.height / 2), 3, paintCircle);
 
     final paintCircle1 = Paint();
     paintCircle1.color = color;
@@ -263,14 +262,62 @@ class AirIndexScaleCustomPainter extends CustomPainter {
     paintCircle1.strokeWidth = 3;
 
     canvas.drawLine(
-      Offset(size.width/500 * index , size.height / 2 - 15),
-      Offset(size.width/500 * index , size.height / 2 + 15),
+      Offset(size.width / 500 * index, size.height / 2 - 15),
+      Offset(size.width / 500 * index, size.height / 2 + 15),
       paintCircle1,
     );
     canvas.drawCircle(
-      Offset(size.width/500 * index , size.height / 2 - 15 - 5), 5,
+      Offset(size.width / 500 * index, size.height / 2 - 15 - 5),
+      5,
       paintCircle1,
     );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+class UvIndexCustomPainter extends CustomPainter {
+  final Color color;
+  final double index;
+
+  UvIndexCustomPainter({
+    super.repaint,
+    required this.color,
+    required this.index,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    double first = size.width / 11;
+    double stroke = 5;
+    final paintBg = Paint();
+    paintBg.color = color;
+    paintBg.style = PaintingStyle.fill;
+    paintBg.strokeCap = StrokeCap.round;
+    paintBg.strokeWidth = stroke;
+    for (var i = 0; i <= 11; i++) {
+      final paint = Paint();
+      paint.color = getIndexColor(i)!;
+      paint.style = i > index ? PaintingStyle.fill : PaintingStyle.stroke;
+      paint.strokeCap = StrokeCap.round;
+      paint.strokeWidth = stroke;
+      if(i <= index){
+        canvas.drawCircle(Offset(first * i, size.height / 2), 10, paintBg);
+      }
+      canvas.drawCircle(Offset(first * i, size.height / 2), 10, paint);
+    }
+
+  }
+
+  Color? getIndexColor(int index) {
+    if (index < 2) return Colors.green[600];
+    if (index < 3) return Colors.amber[600];
+    if (index < 6) return Colors.deepOrange[600];
+    if (index < 9) return Colors.red[600];
+    return Colors.deepPurple[600];
   }
 
   @override

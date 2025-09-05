@@ -24,7 +24,7 @@ extension DailyResponseDtoToDomain on DailyResponseDTO {
         sunSet: e.sunSetTs != null ? getTimeTimestamp(e.sunSetTs!) : null,
         uvIndex: e.uv,
         angleElevationSun: null,
-        angleSunAzimuth: null,
+        angleHorlySun: null,
         moonRise: e.moonRiseTs != null ? getTimeTimestamp(e.moonRiseTs!) : null,
         moonSet: e.moonSetTs != null ? getTimeTimestamp(e.moonSetTs!) : null,
         moonPhase: e.moonPhase!,

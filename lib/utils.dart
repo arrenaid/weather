@@ -36,15 +36,6 @@ String getDayTime(String rise, String set) {
   debugPrint(result);
   return result;
 }
-
-String getNightTime(String rise, String set) {
-  var sunRise = DateFormat("hh:mm").parse(rise);
-  var sunSet = DateFormat("hh:mm").parse(set);
-  final Duration difference = sunSet.difference(sunRise);
-  var result = DateFormat.Hm().format(DateTime(sunRise.year).add(difference));
-  debugPrint(result);
-  return result;
-}
 String getTimeTimestamp(double time){
   final date = DateTime.fromMicrosecondsSinceEpoch(time.toInt());
   return DateFormat.Hm().format(date);
