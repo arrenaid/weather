@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +9,11 @@ import 'package:weather/constants.dart';
 import 'package:weather/screens/city_screen.dart';
 import 'package:weather/screens/days_screen.dart';
 import 'package:weather/screens/forecast_screen.dart';
+import 'package:weather/utils.dart';
+import 'package:weather/widgets/arrow_paint.dart';
 import '../widgets/arrow_button.dart';
 import '../widgets/black_rock_segment.dart';
+import '../widgets/sun_rise_sector.dart';
 import '../widgets/weekly_forecast_listview.dart';
 import '../widgets/wind_sector.dart';
 
@@ -120,7 +121,7 @@ class WeatherScreen extends StatelessWidget {
                         ),
 
                         Text(
-                          state.weather.main,
+                          state.weather.description,
                           style: tsDefault,
                           textAlign: TextAlign.center,
                         ),
@@ -130,13 +131,13 @@ class WeatherScreen extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             physics: const BouncingScrollPhysics(),
                             child: Text(
-                              '${state.weather.temp.toInt().toString()}°',
+                              '${state.weather.temperature.toInt().toString()}°',
                               style: tsBigTemp,
                             ),
                           ),
                         ),
                         Text(
-                          'Ощущается как ${state.weather.feels.toInt().toString()}°',
+                          'Ощущается как ${state.weather.feelsTemp.toInt().toString()}°',
                           style: tsLite,
                           textAlign: TextAlign.center,
                         ),
@@ -144,11 +145,11 @@ class WeatherScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text(
-                              'Min: ${state.weather.min.toInt().toString()}°',
+                              'Min: ${state.weather.minTemp.toInt().toString()}°',
                               style: tsLite,
                             ),
                             Text(
-                              'Max: ${state.weather.max.toInt().toString()}°',
+                              'Max: ${state.weather.maxTemp.toInt().toString()}°',
                               style: tsLite,
                             ),
                           ],
@@ -157,7 +158,7 @@ class WeatherScreen extends StatelessWidget {
                         //черный блок
                         BlackRockSegment(
                           color: currentClr,
-                          wind: state.weather.wind,
+                          wind: state.weather.windSpeed,
                           humidity: state.weather.humidity,
                           pressure: state.weather.pressure,
                           vision: state.weather.vision,
@@ -204,7 +205,7 @@ class WeatherScreen extends StatelessWidget {
                         ],
                         const SizedBox(height: 15),
                         CloudPerSnowSector(
-                          clouds: state.weather.clouds.toDouble(),
+                          clouds: state.weather.cloudiness.toDouble(),
                           precipitation: state.weather.precipitation!,
                           snow: state.weather.snow!,
                           dewPoint: state.weather.dewPoint,
@@ -214,132 +215,60 @@ class WeatherScreen extends StatelessWidget {
                           snowDepth: state.weather.snowDepth,
                         ),
                         const SizedBox(height: 15),
+
                         const SizedBox(height: 15),
-                        Text.rich(
-                          textAlign: TextAlign.center,
-                          TextSpan(
-                              text: '${state.weather.airQualityIndex!.round()}',
-                              style: tsBigTemp.copyWith(fontSize: 40),
-                              children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            // border:
+                            // Border.all(width: 2.5, color: Colors.black),
+                            color: Colors.black,
+                          ),
+                          child: Column(
+                            children: [
+                              Text.rich(
+                                textAlign: TextAlign.center,
                                 TextSpan(
-                                    text: ' индекс качества воздуха',
-                                    style: tsForecast),
-                              ]),
+                                    text:
+                                        '${state.weather.airQualityIndex!.round()}',
+                                    style: tsBigTemp.copyWith(
+                                        fontSize: 40, color: currentClr),
+                                    children: [
+                                      TextSpan(
+                                          text: ' индекс качества воздуха',
+                                          style: tsLite.copyWith(fontSize: 22,
+                                              overflow: TextOverflow.ellipsis,
+                                              color: currentClr)),
+                                    ]),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                child: CustomPaint(
+                                  size: Size(MediaQuery.of(context).size.width , 50),
+                                  painter: AirIndexScaleCustomPainter(
+                                      color: currentClr,
+                                      index: state.weather.airQualityIndex!),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 15),
+
                         ///sun rise set
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(15),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black, width: 2.5),
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Icon(
-                                    CupertinoIcons.sun_max_fill,
-                                    size: 40,
-                                    color: Colors.black,
-                                  ),
-                                  Text(
-                                    'Восход',
-                                    style: tsLite.copyWith(
-                                        fontSize: 20, color: Colors.black),
-                                  ),
-                                  Text(
-                                    '${state.weather.sunRise}',
-                                    style:
-                                        tsDefault.copyWith(color: Colors.black),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-
-                                    Align(
-                                      alignment: AlignmentGeometry.centerLeft,
-                                      child: Text(
-
-                                        'День',
-                                        style: tsLite.copyWith(
-                                            fontSize: 20, color: Colors.black),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: AlignmentGeometry.centerLeft,
-                                      child: Text(
-                                        getDayTime(state.weather.sunRise!, state.weather.sunSet!),
-                                        style:
-                                        tsDefault,
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: AlignmentGeometry.centerRight,
-                                      child: Text(
-                                        'Ночь',
-                                        style: tsLite.copyWith(
-                                            fontSize: 20, color: Colors.black),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: AlignmentGeometry.centerRight,
-                                      child: Text(
-                                        getNightTime(state.weather.sunRise!, state.weather.sunSet!),
-                                        style:
-                                        tsDefault,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.all(15),
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                     Icon(
-                                      CupertinoIcons.moon_fill,
-                                      size: 40,
-                                      color: currentClr,
-                                    ),
-                                    Text(
-                                      'Закат',
-                                      style: tsLite.copyWith(
-                                          fontSize: 20, color: currentClr),
-                                    ),
-                                    Text(
-                                      '${state.weather.sunSet}',
-                                      style:
-                                      tsDefault.copyWith(color: currentClr),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
+                        SunRiseSector(
+                          color: currentClr,
+                          sunRise: state.weather.sunRise,
+                          sunSet: state.weather.sunSet,
+                          timeZone: state.weather.timeZone,
                         ),
                         const SizedBox(height: 15),
 
                         ///wind
                         WindSector(
                           color: currentClr,
-                          speed: state.weather.wind,
+                          speed: state.weather.windSpeed,
                           gusts: state.weather.windGusts!,
                           direction: state.weather.windDirection!,
                           directionShort: state.weather.windDirShort!,

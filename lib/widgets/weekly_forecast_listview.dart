@@ -32,10 +32,10 @@ class WeeklyForecastListView extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      '${forecast[index].temp.round()}°',
+                      '${forecast[index].temperature.round()}°',
                       style: tsDefault,
                     ),
-                    LoadImage(iconName: forecast[index].icon, isBit: true,height: 30,),
+                    LoadImage(iconName: forecast[index].iconName, isBit: true,height: 30,),
                     // const Image(
                     //   image: AssetImage('assets/images/weather.png'),
                     //   height: 30,

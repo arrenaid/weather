@@ -5,108 +5,162 @@ part 'daily_data_dto.g.dart';
 
 @JsonSerializable()
 class DailyDataDTO {
+  ///Максимальная ощущаемая температура: 4°C //	17.3
   @JsonKey(name: 'app_max_temp')
-  final double appMaxTemp;///Максимальная ощущаемая температура: 4°C //	17.3
+  final double? appMaxTemp;
+
+  ///Минимальная ощущаемая температура: -2°C //	11.5
   @JsonKey(name: 'app_min_temp')
-  final double appMinTemp; ///Минимальная ощущаемая температура: -2°C //	11.5
-  final double clouds; ///Облачность: 100%//	73
+  final double? appMinTemp;
+
+  ///Облачность: 100%//	73
+  final double? clouds;
+
   @JsonKey(name: 'clouds_hi')
-  final double cloudsHi; //	53
+  final double? cloudsHi; //	53
   @JsonKey(name: 'clouds_low')
-  final double cloudsLow; //	30
+  final double? cloudsLow; //	30
   @JsonKey(name: 'clouds_mid')
-  final double cloudsMid; //	81
-  final String datetime; //	"2025-08-29"
-  final double dewpt; ///Точка росы: 1°C //	11.6
+  final double? cloudsMid; //	81
+  final String? datetime; //	"2025-08-29"
+  ///Точка росы: 1°C //	11.6
+  final double? dewpt;
   @JsonKey(name: 'high_temp')
-  final double highTemp; //	17.3
+  final double? highTemp; //	17.3
   @JsonKey(name: 'low_temp')
-  final double lowTemp; //	15.5
+  final double? lowTemp; //	15.5
+
+  ///Максимальный индекс солнечного излучения: 655 //	null
   @JsonKey(name: 'max_dhi', defaultValue: 0)
-  final double? maxDhi; ///Максимальный индекс солнечного излучения: 655 //	null
+  final double? maxDhi;
+
+  ///Максимальная температура: 1.5°C//	17.3
   @JsonKey(name: 'max_temp')
-  final double maxTemp; ///Максимальная температура: 1.5°C//	17.3
+  final double? maxTemp;
+
+  ///Минимальная температура: -1.23°C//	11.5
   @JsonKey(name: 'min_temp')
-  final double minTemp; ///Минимальная температура: -1.23°C//	11.5
+  final double? minTemp;
+
+  ///Фаза луны: 0.87//	0.45
   @JsonKey(name: 'moon_phase')
-  final double moonPhase; ///Фаза луны: 0.87//	0.45
+  final double? moonPhase;
   @JsonKey(name: 'moon_phase_lunation')
-  final double moonPhaseLunation; //	0.23
+  final double? moonPhaseLunation; //	0.23
+
+  ///Время восхода и заката солнца/луны: Указаны в формате timestamp //	1756461867
   @JsonKey(name: 'moonrise_ts')
-  final double moonRiseTs; ///Время восхода и заката солнца/луны: Указаны в формате timestamp //	1756461867
+  final double? moonRiseTs;
+
+  ///Время восхода и заката солнца/луны: Указаны в формате timestamp  //	1756489529
   @JsonKey(name: 'moonset_ts')
-  final double moonSetTs; ///Время восхода и заката солнца/луны: Указаны в формате timestamp  //	1756489529
-  final double ozone; //	304
-  final double pop; ///Вероятность осадков: 75% //	75
-  final double precip; ///Осадки: 1.1 мм //	5.3691406
-  final double pres;///Атмосферное давление: 1005 гПа //	999
-  final double rh;///Влажность: 95% //	86
-  final double slp; ///Давление на уровне моря: 1012.89 гПа //	1017
-  final double snow; ///Снег: 10.45 мм
+  final double? moonSetTs;
+  final double? ozone; //	304
+
+  ///Вероятность осадков: 75% //	75
+  final double? pop;
+
+  ///Осадки: 1.1 мм //	5.3691406
+  final double? precip;
+
+  ///Атмосферное давление: 1005 гПа //	999
+  final double? pres;
+
+  ///Влажность: 95% //	86
+  final double? rh;
+
+  ///Давление на уровне моря: 1012.89 гПа //	1017
+  final double? slp;
+
+  ///Снег: 10.45 мм
+  final double? snow;
+
+  ///Высота снежного покрова: 45 мм
   @JsonKey(name: 'snow_depth')
-  final double snowDepth; ///Высота снежного покрова: 45 мм
+  final double? snowDepth;
+
+  ///Время восхода и заката солнца/луны: Указаны в формате timestamp  //	1756434371
   @JsonKey(name: 'sunrise_ts')
-  final double sunRiseTs; ///Время восхода и заката солнца/луны: Указаны в формате timestamp  //	1756434371
+  final double? sunRiseTs;
+
+  ///Время восхода и заката солнца/луны: Указаны в формате timestamp //	1756484865
   @JsonKey(name: 'sunset_ts')
-  final double sunSetTs; ///Время восхода и заката солнца/луны: Указаны в формате timestamp //	1756484865
-  final double temp; /// Температура: 1°C //	13.9
-  final double ts; ///Локальное время Timestamp
-  final double uv; ///УФ-индекс: 6.5 //	2
+  final double? sunSetTs;
+
+  /// Температура: 1°C //	13.9
+  final double? temp;
+
+  ///Локальное время Timestamp
+  final double? ts;
+
+  ///УФ-индекс: 6.5 //	2
+  final double? uv;
   @JsonKey(name: 'valid_date')
-  final String validDate; //	"2025-08-29"
-  final double vis; ///Видимость: 3 км //	23.6
-  final DailyWeatherDTO
-      weather; //	{ icon: "r01d", code: 500, description: "Light rain" }
+  final String? validDate; //	"2025-08-29"
+
+  ///Видимость: 3 км //	23.6
+  final double? vis;
+
+//	{ icon: "r01d", code: 500, description: "Light rain" }
+  final DailyWeatherDTO? weather;
+
+  ///Направление ветра: 105° (восток-северо-восток, wind_cdir: "ENE")//	"SSE"
   @JsonKey(name: 'wind_cdir')
-  final String windCdir; ///Направление ветра: 105° (восток-северо-восток, wind_cdir: "ENE")//	"SSE"
+  final String? windCdir;
+
+  ///Направление ветра: 105° (восток-северо-восток, wind_cdir: "ENE") //	"south-southeast"
   @JsonKey(name: 'wind_cdir_full')
-  final String windCdirFull;///Направление ветра: 105° (восток-северо-восток, wind_cdir: "ENE") //	"south-southeast"
+  final String? windCdirFull;
+
+  ///Направление ветра: 105°//	162
   @JsonKey(name: 'wind_dir')
-  final double windDir; ///Направление ветра: 105°//	162
+  final double? windDir;
   @JsonKey(name: 'wind_gust_spd')
-  final double windGustSpd; //	3.6
+  final double? windGustSpd; //	3.6
+
+  ///Скорость ветра: 13.85 м/с
   @JsonKey(name: 'wind_spd')
-  final double windSpd; ///Скорость ветра: 13.85 м/с
+  final double? windSpd;
 
   DailyDataDTO(
-      {required this.appMaxTemp,
-      required this.appMinTemp,
-      required this.clouds,
-      required this.cloudsHi,
-      required this.cloudsLow,
-      required this.cloudsMid,
-      required this.datetime,
-      required this.dewpt,
-      required this.highTemp,
-      required this.lowTemp,
-      required this.maxDhi,
-      required this.maxTemp,
-      required this.minTemp,
-      required this.moonPhase,
-      required this.moonPhaseLunation,
-      required this.moonRiseTs,
-      required this.moonSetTs,
-      required this.ozone,
-      required this.pop,
-      required this.precip,
-      required this.pres,
-      required this.rh,
-      required this.slp,
-      required this.snow,
-      required this.snowDepth,
-      required this.sunRiseTs,
-      required this.sunSetTs,
-      required this.temp,
-      required this.ts,
-      required this.uv,
-      required this.validDate,
-      required this.vis,
-      required this.weather,
-      required this.windCdir,
-      required this.windCdirFull,
-      required this.windDir,
-      required this.windGustSpd,
-      required this.windSpd});
+      {this.appMaxTemp,
+      this.appMinTemp,
+      this.clouds,
+      this.cloudsHi,
+      this.cloudsLow,
+      this.cloudsMid,
+      this.datetime,
+      this.dewpt,
+      this.highTemp,
+      this.lowTemp,
+      this.maxDhi,
+      this.maxTemp,
+      this.minTemp,
+      this.moonPhase,
+      this.moonPhaseLunation,
+      this.moonRiseTs,
+      this.moonSetTs,
+      this.ozone,
+      this.pop,
+      this.precip,
+      this.pres,
+      this.rh,
+      this.slp,
+      this.snow,
+      this.snowDepth,
+      this.sunRiseTs,
+      this.sunSetTs,
+      this.temp,
+      this.ts,
+      this.uv,
+      this.validDate,
+      this.vis,
+      this.weather,
+      this.windCdir,
+      this.windCdirFull,
+      this.windDir,
+      this.windGustSpd,
+      this.windSpd});
 
   factory DailyDataDTO.fromJson(Map<String, dynamic> json) =>
       _$DailyDataDTOFromJson(json);

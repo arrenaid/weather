@@ -7,6 +7,7 @@ import 'package:weather/model/weather_base.dart';
 import 'package:weather/widgets/arrow_button.dart';
 import '../bloc/weather_bloc.dart';
 import '../constants.dart';
+import '../utils.dart';
 import '../widgets/load_image.dart';
 
 class ForecastScreen extends StatelessWidget {
@@ -190,7 +191,7 @@ class ForecastDailyCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       LoadImage(
-                          iconName: weather.icon, height: 50, isBit: true),
+                          iconName: weather.iconName, height: 50, isBit: true),
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50),
@@ -199,7 +200,7 @@ class ForecastDailyCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 15, vertical: 3),
                         child: Text(
-                          weather.main,
+                          weather.description,
                           style: tsMini.copyWith(color: color),
                         ),
                       ),
@@ -218,7 +219,7 @@ class ForecastDailyCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 15, vertical: 3),
                         child: Text(
-                          '${weather.temp.round()}°',
+                          '${weather.temperature.round()}°',
                           style: tsDefault.copyWith(color: color),
                         ),
                       ),
@@ -228,16 +229,16 @@ class ForecastDailyCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       const Text('max ', style: tsForecast),
-                      Text('${weather.max.round()}° ',
+                      Text('${weather.maxTemp.round()}° ',
                           style: tsForecast.copyWith(
                               fontSize: 21, fontWeight: FontWeight.bold)),
                       const Text('min ', style: tsForecast),
-                      Text('${weather.min.round()}° ',
+                      Text('${weather.minTemp.round()}° ',
                           style: tsForecast.copyWith(
                               fontSize: 21, fontWeight: FontWeight.bold)),
                       Text('feels like it ',
                           style: tsForecast.copyWith(fontSize: 21)),
-                      Text('${weather.feels.round()}° ',
+                      Text('${weather.feelsTemp.round()}° ',
                           style: tsForecast.copyWith(
                               fontSize: 21, fontWeight: FontWeight.bold)),
                     ],
@@ -306,7 +307,7 @@ class ForecastDailyCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text('wind', style: tsForecast),
-                            Text('${weather.wind.round()}\nm/s',
+                            Text('${weather.windSpeed.round()}\nm/s',
                                 style: tsForecast.copyWith(
                                     fontWeight: FontWeight.bold)),
                           ],

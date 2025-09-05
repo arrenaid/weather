@@ -8,6 +8,7 @@ import 'package:weather/bloc/weather_bloc.dart';
 import 'package:weather/constants.dart';
 import 'package:weather/model/weather.dart';
 import 'package:weather/widgets/load_image.dart';
+import '../utils.dart';
 
 class DaysScreen extends StatelessWidget {
   DaysScreen({Key? key}) : super(key: key);
@@ -213,11 +214,11 @@ class DaysScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                weather.main.toString(),
+                weather.description.toString(),
                 style: tsMini.copyWith(color: currentClr),
               ),
               Text(
-                '${weather.temp.toInt().toString()}°',
+                '${weather.temperature.toInt().toString()}°',
                 style: tsTitleBolt.copyWith(color: currentClr),
               ),
               // LoadImage(icon: weather.icon),
@@ -230,11 +231,11 @@ class DaysScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  LoadImage(iconName: weather.icon),
+                  LoadImage(iconName: weather.iconName),
                   Column(
                     children: [
                       Text(
-                        '${weather.wind.toString()}м/с',
+                        '${weather.windSpeed.toString()}м/с',
                         style: tsMini.copyWith(color: currentClr),
                       ),
                       Text(

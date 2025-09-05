@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:weather/bloc/weather_bloc.dart';
 import 'package:weather/model/weather.dart';
 
 const _apiKey = '66e25765dcbcbb5a1a38eb7cb620c043';
@@ -39,23 +38,23 @@ class WeatherMapHelper {
           weathers.add(
             Weather(
               city: forecast['city']['name'].toString(),
-              main: forecast['list'][i]['weather'][0]['main'].toString(),
-              icon: forecast['list'][i]['weather'][0]['icon'].toString(),
-              temp:
+              description: forecast['list'][i]['weather'][0]['main'].toString(),
+              iconName: forecast['list'][i]['weather'][0]['icon'].toString(),
+              temperature:
                   double.parse(forecast['list'][i]['main']['temp'].toString()),
-              feels: double.parse(
+              feelsTemp: double.parse(
                   forecast['list'][i]['main']['feels_like'].toString()),
-              min: double.parse(
+              minTemp: double.parse(
                   forecast['list'][i]['main']['temp_min'].toString()),
-              max: double.parse(
+              maxTemp: double.parse(
                   forecast['list'][i]['main']['temp_max'].toString()),
-              wind:
+              windSpeed:
                   double.parse(forecast['list'][i]['wind']['speed'].toString()),
               humidity: double.parse(
                   forecast['list'][i]['main']['humidity'].toString()),
               pressure: double.parse(
                   forecast['list'][i]['main']['pressure'].toString()),
-              clouds:
+              cloudiness:
                   int.parse(forecast['list'][i]['clouds']['all'].toString()),
               date: forecast['list'][i]['dt_txt'],
             ),

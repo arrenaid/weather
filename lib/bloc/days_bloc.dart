@@ -76,7 +76,7 @@ class DaysBloc extends Bloc<DaysEvent, DaysState> {
       }
     }
     //сортировка по возростанию температуры
-    result.sort((Weather a, Weather b) => a.temp.compareTo(b.temp));
+    result.sort((Weather a, Weather b) => a.temperature.compareTo(b.temperature));
     return result;
   }
 }

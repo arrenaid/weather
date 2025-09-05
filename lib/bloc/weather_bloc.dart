@@ -86,6 +86,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     try {
       List<WeatherBase>? dailyForecast =
           await repository.getDailyForecastInCity(state.city);
+
       emit(LoadWeatherState(event.weather.toUnit(dailyForecast!), state.city));
     } on SocketException catch (e) {
       emit(ErrorState('SocketException: $e', state.city));

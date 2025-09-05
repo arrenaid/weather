@@ -1,15 +1,12 @@
 import 'package:weather/model/weather.dart';
 
-class WeatherBase implements Weather {
-  late final double temp;
-  late final double feels;
-  late final double min;
-  late final double max;
-
+class WeatherBase {
+  late final double temperature;
+  late final double feelsTemp;
+  late final double minTemp;
+  late final double maxTemp;
   late final double humidity;
   late final double pressure;
-
-  late final List<WeatherBase>? weeklyForecast;
   late final double? vision;
 
   ///sun
@@ -22,38 +19,43 @@ class WeatherBase implements Weather {
   ///moon
   late final String? moonRise;
   late final String? moonSet;
-  late final String? moonPhase;
+  late final double? moonPhase;
 
   ///snow
   late final double? snow;
   late final double? snowDepth;
 
-  late final int clouds;
+  ///air
+  late final double cloudiness;
   late final double? chanceOfPrecipitation;
   late final double? precipitation;
   late final double? dewPoint;
   late final double? ozone;
+  late final double? airQualityIndex;
 
-  late final double wind;
+  ///wind
+  late final double windSpeed;
   late final double? windDirection;
   late final String? windDirShort;
   late final String? windDirFull;
-  late final double? airQualityIndex;
   late final double? windGusts;
 
   late final String? stateCode;
   late final String? timeZone;
   late final String? timeResponse;
   late final String date;
+
   late final String city;
-  late final String main;
-  late final String icon;
+  late final String description;
+  late final String iconName;
+
+  late final List<WeatherBase>? weeklyForecast;
 
   WeatherBase({
-    required this.temp,
-    required this.feels,
-    required this.min,
-    required this.max,
+    required this.temperature,
+    required this.feelsTemp,
+    required this.minTemp,
+    required this.maxTemp,
     required this.humidity,
     required this.pressure,
     this.weeklyForecast,
@@ -68,12 +70,12 @@ class WeatherBase implements Weather {
     this.moonPhase,
     this.snow,
     this.snowDepth,
-    required this.clouds,
+    required this.cloudiness,
     this.chanceOfPrecipitation,
     this.precipitation,
     this.dewPoint,
     this.ozone,
-    required this.wind,
+    required this.windSpeed,
     this.windDirection,
     this.windDirShort,
     this.windDirFull,
@@ -84,15 +86,15 @@ class WeatherBase implements Weather {
     this.timeResponse,
     required this.date,
     required this.city,
-    required this.main,
-    required this.icon,
+    required this.description,
+    required this.iconName,
   });
 
   WeatherBase.allRec({
-    required this.temp,
-    required this.feels,
-    required this.min,
-    required this.max,
+    required this.temperature,
+    required this.feelsTemp,
+    required this.minTemp,
+    required this.maxTemp,
     required this.humidity,
     required this.pressure,
     required this.weeklyForecast,
@@ -107,12 +109,12 @@ class WeatherBase implements Weather {
     required this.moonPhase,
     required this.snow,
     required this.snowDepth,
-    required this.clouds,
+    required this.cloudiness,
     required this.chanceOfPrecipitation,
     required this.precipitation,
     required this.dewPoint,
     required this.ozone,
-    required this.wind,
+    required this.windSpeed,
     required this.windDirection,
     required this.windDirShort,
     required this.windDirFull,
@@ -123,7 +125,7 @@ class WeatherBase implements Weather {
     required this.timeResponse,
     required this.date,
     required this.city,
-    required this.main,
-    required this.icon,
+    required this.description,
+    required this.iconName,
   });
 }
