@@ -10,7 +10,7 @@ class Weather{
   late final double windSpeed;
   late final double humidity;
   late final double pressure;
-  late final int cloudiness;
+  late final double cloudiness;
   late final String date;
 
   Weather({ required this.city,
@@ -38,7 +38,7 @@ class Weather{
     windSpeed = double.parse(map['wind']['speed'].toString());
     humidity = double.parse(map['main']['humidity'].toString());
     pressure = double.parse(map['main']['pressure'].toString());
-    cloudiness = int.parse( map['clouds']['all'].toString());
+    cloudiness = double.parse( map['clouds']['all'].toString());
   }
 
   @override

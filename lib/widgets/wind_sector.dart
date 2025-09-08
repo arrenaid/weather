@@ -8,18 +8,18 @@ class WindSector extends StatelessWidget {
     super.key,
     required this.color,
     required this.speed,
-    required this.gusts,
-    required this.directionFull,
-    required this.directionShort,
-    required this.direction,
+    this.gusts,
+    this.directionFull,
+    this.directionShort,
+    this.direction,
   });
 
   final Color color;
   final double speed;
-  final double gusts;
-  final String directionFull;
-  final String directionShort;
-  final double direction;
+  final double? gusts;
+  final String? directionFull;
+  final String? directionShort;
+  final double? direction;
 
   @override
   Widget build(BuildContext context) {
@@ -54,23 +54,25 @@ class WindSector extends StatelessWidget {
                 height: 3,
                 color: color,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    gusts.round().toString(),
-                    style: tsBigTemp.copyWith(
-                      color: color,
-                      fontSize: 60,
-                      letterSpacing: -4,
+              if ((gusts != null)) ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      gusts!.round().toString(),
+                      style: tsBigTemp.copyWith(
+                        color: color,
+                        fontSize: 60,
+                        letterSpacing: -4,
+                      ),
                     ),
-                  ),
-                  Text(
-                    'м/с\nПорывы',
-                    style: tsLite.copyWith(color: color, fontSize: 20),
-                  ),
-                ],
-              ),
+                    Text(
+                      'м/с\nПорывы',
+                      style: tsLite.copyWith(color: color, fontSize: 20),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
           Column(
@@ -81,14 +83,16 @@ class WindSector extends StatelessWidget {
                 height: 200,
                 child: Stack(
                   children: [
-                    Align(
-                      alignment: const FractionalOffset(0.5, 0.5),
-                      child: Text(
-                        directionShort,
-                        style: tsBigTemp.copyWith(
-                            color: color, letterSpacing: -5, fontSize: 40),
+                    if ((directionShort != null)) ...[
+                      Align(
+                        alignment: const FractionalOffset(0.5, 0.5),
+                        child: Text(
+                          directionShort!,
+                          style: tsBigTemp.copyWith(
+                              color: color, letterSpacing: -5, fontSize: 40),
+                        ),
                       ),
-                    ),
+                    ],
                     Align(
                       alignment: const FractionalOffset(0.5, 0.1),
                       child: Text(
@@ -121,20 +125,24 @@ class WindSector extends StatelessWidget {
                       size: const Size(200, 200),
                       painter: WindDirectionCustomPainter(color: color),
                     ),
-                    Transform.rotate(
-                      angle: degreeToRadian(direction),
-                      child: CustomPaint(
-                        size: const Size(200, 200),
-                        painter: WindArrowCustomPainter(color: color),
+                    if ((direction != null)) ...[
+                      Transform.rotate(
+                        angle: degreeToRadian(direction!),
+                        child: CustomPaint(
+                          size: const Size(200, 200),
+                          painter: WindArrowCustomPainter(color: color),
+                        ),
                       ),
-                    ),
+                    ],
                   ],
                 ),
               ),
-              Text(
-                directionFull,
-                style: tsLite.copyWith(color: color, fontSize: 20),
-              ),
+              if ((directionFull != null)) ...[
+                Text(
+                  directionFull!,
+                  style: tsLite.copyWith(color: color, fontSize: 20),
+                ),
+              ],
             ],
           ),
         ],

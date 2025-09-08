@@ -2,20 +2,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class ArrowCustomPainter extends CustomPainter {
-  final Color borderColor;
-  final Color backgroundColor;
-  final double borderWidth;
+  final Color color;
 
   ArrowCustomPainter({
-    this.borderColor = Colors.black,
-    this.borderWidth = 1,
-    this.backgroundColor = Colors.transparent,
+    this.color = Colors.black,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint();
-    paint.color = Colors.black;
+    paint.color = color;
     paint.style = PaintingStyle.stroke;
     paint.strokeCap = StrokeCap.round;
     paint.strokeWidth = size.height / 10;
@@ -38,15 +34,7 @@ class ArrowCustomPainter extends CustomPainter {
 }
 
 class DoubleLineCustomPainter extends CustomPainter {
-  final Color borderColor;
-  final Color backgroundColor;
-  final double borderWidth;
-
-  DoubleLineCustomPainter({
-    this.borderColor = Colors.black,
-    this.borderWidth = 1,
-    this.backgroundColor = Colors.transparent,
-  });
+  DoubleLineCustomPainter();
 
   @override
   void paint(Canvas canvas, Size size) {

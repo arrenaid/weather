@@ -33,7 +33,7 @@ class WeatherScreen extends StatelessWidget {
       body: GestureDetector(
         onVerticalDragEnd: (details) {
           if (details.velocity.pixelsPerSecond.dy > 500) {
-            context.read<WeatherBloc>().add(LoadWeatherEvent(context));
+            context.read<WeatherBloc>().add(LoadWeatherEvent());
           }
         },
         onHorizontalDragEnd: (dragEndDetails) {
@@ -223,7 +223,7 @@ class WeatherScreen extends StatelessWidget {
                               ),
                               ArrowButton(execute: () {
                                 context.read<WeatherBloc>().add(
-                                    LoadForecastEvent(state.weather, context));
+                                    LoadForecastEvent(state.weather));
                                 //         Navigator.pushNamed(
                                 //           context,
                                 //           DaysScreen.route,
@@ -238,10 +238,11 @@ class WeatherScreen extends StatelessWidget {
                           iconName: state.weather.iconName,
                           color: currentClr,
                           clouds: state.weather.cloudiness.toDouble(),
-                          precipitation: state.weather.precipitation!,
+                          precipitation: state.weather.precipitation,
                           dewPoint: state.weather.dewPoint,
                           chanceOfPrecipitation:
                               state.weather.chanceOfPrecipitation,
+                          qualifier: context.read<WeatherBloc>().getCurrentRepositoryQualifier(),
                         ),
 
                         SnowSector(
@@ -267,6 +268,7 @@ class WeatherScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 15),
 
+              if ((state.weather.angleElevationSun != null)) ...[
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: decorationFill,
@@ -314,18 +316,17 @@ class WeatherScreen extends StatelessWidget {
                           ),
                         ),
 
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 15),],
 
                         ///wind
                         WindSector(
                           color: currentClr,
                           speed: state.weather.windSpeed,
-                          gusts: state.weather.windGusts!,
-                          direction: state.weather.windDirection!,
-                          directionShort: state.weather.windDirShort!,
-                          directionFull: state.weather.windDirFull!,
+                          gusts: state.weather.windGusts,
+                          direction: state.weather.windDirection,
+                          directionShort: state.weather.windDirShort,
+                          directionFull: state.weather.windDirFull,
                         ),
-
                         const SizedBox(height: 15),
                         if ((state.weather.uvIndex != null)) ...[
                           UvIndexSector(
@@ -385,7 +386,7 @@ class WeatherScreen extends StatelessWidget {
                 );
               }
               if (state is CityState) {
-                context.read<WeatherBloc>().add(LoadWeatherEvent(context));
+                context.read<WeatherBloc>().add(LoadWeatherEvent());
                 return const Center(
                   child: CircularProgressIndicator(
                     color: Colors.white,
@@ -622,19 +623,21 @@ class CloudPerSnowSector extends StatelessWidget {
   const CloudPerSnowSector({
     super.key,
     required this.clouds,
-    required this.precipitation,
+    this.precipitation,
     this.chanceOfPrecipitation,
     this.dewPoint,
     required this.color,
     required this.iconName,
+    required this.qualifier,
   });
 
   final Color color;
   final String iconName;
   final double clouds;
-  final double precipitation;
+  final double? precipitation;
   final double? chanceOfPrecipitation;
   final double? dewPoint;
+  final RepositoryQualifier qualifier;
 
   @override
   Widget build(BuildContext context) {
@@ -679,7 +682,7 @@ class CloudPerSnowSector extends StatelessWidget {
               height: 150,
               child: LoadImage(
                 iconName: iconName,
-                isBit: true,
+                isBit: qualifier == RepositoryQualifier.weatherBit,
               ),
             )),
           ],

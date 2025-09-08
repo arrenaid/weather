@@ -1,4 +1,6 @@
-class WeatherBase {
+import 'package:weather/model/weather.dart';
+
+class WeatherBase{
   late final double temperature;
   late final double feelsTemp;
   late final double minTemp;

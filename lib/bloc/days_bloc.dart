@@ -18,8 +18,8 @@ class DaysBloc extends Bloc<DaysEvent, DaysState> {
   _forecast(LoadDaysEvent event, Emitter emit) async {
     try {
       final forecast = await client.getForecast(event.city);
-        emit(DaysState(_getRes(state.indexSelected, forecast),
-            forecast, state.indexSelected));
+        emit(DaysState(_getRes(state.indexSelected, forecast as List<Weather>),
+            forecast as List<Weather>, state.indexSelected));
     }on SocketException catch (e) { emit(ErrorDaysState('SocketException: $e',
         state.weathersSort,state.weathersAll, state.indexSelected));
     }on HttpException catch (e){  emit(ErrorDaysState('HttpException: $e',

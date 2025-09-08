@@ -1,12 +1,13 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:weather/screens/city_screen.dart';
 import 'package:weather/screens/weather_screen.dart';
 
 import '../constants.dart';
 
 void showError({BuildContext? context, required String error}){
-  final _context = context ?? WeatherScreen.globalKey.currentContext;
+  final _context = context /*?? WeatherScreen.globalKey.currentContext ?? CityScreen.globalKey.currentContext*/;
   if(_context != null){
     //showDialog(context: _context, builder: (_) => ErrorDialog(error));
     Flushbar(

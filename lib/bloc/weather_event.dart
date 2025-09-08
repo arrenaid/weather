@@ -12,12 +12,10 @@ class CityEvent extends WeatherEvent {
 }
 
 class LoadWeatherEvent extends WeatherEvent {
-   final BuildContext context;
-
-  LoadWeatherEvent(this.context);
+  LoadWeatherEvent();
 
   @override
-  List<Object?> get props => [context];
+  List<Object?> get props => [];
 }
 
 class ErrorEvent extends WeatherEvent {
@@ -36,9 +34,17 @@ class LoadCitySharedPreferencesEvent extends WeatherEvent {
 
 class LoadForecastEvent extends WeatherEvent {
   final WeatherBase weather;
-  final BuildContext context;
-  LoadForecastEvent(this.weather, this.context) : super();
+  LoadForecastEvent(this.weather) : super();
 
   @override
-  List<Object?> get props => [weather,context];
+  List<Object?> get props => [weather];
+}
+
+class ChangeRepositoryEvent extends WeatherEvent {
+  final RepositoryQualifier value;
+
+  ChangeRepositoryEvent(this.value);
+
+  @override
+  List<Object?> get props => [value];
 }

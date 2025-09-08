@@ -78,7 +78,7 @@ const LinearGradient bdGradient = LinearGradient(
     ],
     tileMode: TileMode.mirror,
 );
-const double brDef = 15;
+const double brDef = 25;
 const decorationFill = BoxDecoration(
   borderRadius: BorderRadius.all(Radius.circular(25)),
   color: Colors.black,
@@ -87,3 +87,7 @@ const decorationBorder = BoxDecoration(
   borderRadius: BorderRadius.all(Radius.circular(25)),
   border: Border.fromBorderSide(BorderSide(color: Colors.black, width: 2.5)),
 );
+enum RepositoryQualifier{
+  openWeatherMap,
+  weatherBit,
+}

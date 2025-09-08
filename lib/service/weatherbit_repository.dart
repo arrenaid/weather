@@ -6,10 +6,11 @@ import 'package:weather/model/current_dto.dart';
 import 'package:weather/model/current_dto_to_domain.dart';
 import 'package:weather/model/daily_response_dto.dart';
 import 'package:weather/model/daily_response_dto_to_domain.dart';
+import 'package:weather/service/repository_base.dart';
 import 'package:weather/model/weather_base.dart';
 import 'package:weather/service/weatherbit_query.dart';
 
-class WeatherBitRepository {
+class WeatherBitRepository extends RepositoryBase{
   late final Dio _dio;
   final Function(String, String) onErrorHandler;
   late final String _apiKey;
@@ -23,12 +24,14 @@ class WeatherBitRepository {
 
   }
 
+  @override
   Future<void> setApiKey() async {
     await dotenv.load(fileName: ".env");
     _apiKey = dotenv.get('WEATHERBIT_API_KEY');
   }
 
-  Future<List<WeatherBase>?> getDailyForecastInCity(String city) async {
+  @override
+  Future<List<WeatherBase>?> getForecast(String city) async {
     Response response = await _dio.get(
         WeatherBitQuery.baseUrl + WeatherBitQuery.dailyEndPoint,
         queryParameters: {
@@ -48,7 +51,8 @@ class WeatherBitRepository {
     return forecast;
   }
 
-  Future<WeatherBase?> getCurrentWeatherInCity(String city) async {
+  @override
+  Future<WeatherBase?> getCurrentWeather(String city) async {
 
       Response response = await _dio.get(
           WeatherBitQuery.baseUrl + WeatherBitQuery.currentEndPoint,
