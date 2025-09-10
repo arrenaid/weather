@@ -10,8 +10,8 @@ class DailyResponseDTO {
   @JsonKey(name: 'country_code')
   final String? countryCode; //	"RU"
   final List<DailyDataDTO>? data; //	(7)[ {…}, {…}, {…}, {…}, {…}, {…}, {…} ]
-  final String? lat; //"55.75222"
-  final String? lon; //	"37.61556"
+  final double? lat; //"55.75222"
+  final double? lon; //	"37.61556"
   @JsonKey(name: 'state_code')
   final String? stateCode; //	"48"
   final String? timezone; //	"Europe/Moscow"

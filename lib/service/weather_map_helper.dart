@@ -16,7 +16,7 @@ class WeatherMapHelper extends RepositoryBase {
   Future<dynamic> getWeather(String city) async {
     try {
       var parse = Uri.parse(
-          'http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${_apiKey}&units=metric');//&lang=ru
+          'http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${_apiKey}&units=metric'); //&lang=ru
       http.Response response = await http.get(parse);
       if (response.statusCode == 200) {
         var body = jsonDecode(response.body);
@@ -31,7 +31,7 @@ class WeatherMapHelper extends RepositoryBase {
   }
 
   //погода на 5 дней через каждые 3 часа
-  Future<dynamic> getHourlyForecast(String city) async {
+  Future<List<Weather>?> getHourlyForecast(String city) async {
     var parse = Uri.parse(
         'http://api.openweathermap.org/data/2.5/forecast?q=${city}&APPID=${_apiKey}&units=metric&lang=ru');
     http.Response response = await http.get(parse);
@@ -48,7 +48,7 @@ class WeatherMapHelper extends RepositoryBase {
               description: forecast['list'][i]['weather'][0]['main'].toString(),
               iconName: forecast['list'][i]['weather'][0]['icon'].toString(),
               temperature:
-              double.parse(forecast['list'][i]['main']['temp'].toString()),
+                  double.parse(forecast['list'][i]['main']['temp'].toString()),
               feelsTemp: double.parse(
                   forecast['list'][i]['main']['feels_like'].toString()),
               minTemp: double.parse(
@@ -56,22 +56,23 @@ class WeatherMapHelper extends RepositoryBase {
               maxTemp: double.parse(
                   forecast['list'][i]['main']['temp_max'].toString()),
               windSpeed:
-              double.parse(forecast['list'][i]['wind']['speed'].toString()),
+                  double.parse(forecast['list'][i]['wind']['speed'].toString()),
               humidity: double.parse(
                   forecast['list'][i]['main']['humidity'].toString()),
               pressure: double.parse(
                   forecast['list'][i]['main']['pressure'].toString()),
               cloudiness:
-              double.parse(forecast['list'][i]['clouds']['all'].toString()),
+                  double.parse(forecast['list'][i]['clouds']['all'].toString()),
               date: forecast['list'][i]['dt_txt'],
             ),
           );
         }
         return weathers;
       } catch (e) {
-        return Future.error(e);
+        debugPrint(e.toString());
       }
     }
+    return null;
   }
 
   @override
@@ -81,18 +82,20 @@ class WeatherMapHelper extends RepositoryBase {
       //
       // dynamic map = await client.getWeather(state.city);
       var result = Weather.fromJson(map);
-      WeatherBase base = WeatherBase(city: result.city,
-          description: result.description,
-          iconName: result.iconName,
-          temperature: result.temperature,
-          feelsTemp: result.feelsTemp,
-          minTemp: result.minTemp,
-          maxTemp: result.maxTemp,
-          windSpeed: result.windSpeed,
-          humidity: result.humidity,
-          pressure: result.pressure,
-          cloudiness: result.cloudiness,date: DateTime.now().toString(),
-          );
+      WeatherBase base = WeatherBase(
+        city: result.city,
+        description: result.description,
+        iconName: result.iconName,
+        temperature: result.temperature,
+        feelsTemp: result.feelsTemp,
+        minTemp: result.minTemp,
+        maxTemp: result.maxTemp,
+        windSpeed: result.windSpeed,
+        humidity: result.humidity,
+        pressure: result.pressure,
+        cloudiness: result.cloudiness,
+        date: DateTime.now().toString(),
+      );
       return base;
     } on SocketException catch (e) {
       debugPrint(e.toString());
@@ -107,6 +110,7 @@ class WeatherMapHelper extends RepositoryBase {
       debugPrint(e.toString());
       //emit(ErrorState(e.toString(), state.city));
     }
+    return null;
   }
 
   @override
@@ -117,6 +121,28 @@ class WeatherMapHelper extends RepositoryBase {
 
   @override
   Future<List<WeatherBase>?> getForecast(String city) async {
-    return await getHourlyForecast(city);
+    List<Weather>? list = await getHourlyForecast(city);
+    List<WeatherBase> baseList= [];
+    if(list != null) {
+      for (var result in list) {
+        //var result = Weather.fromJson(map);
+        WeatherBase base = WeatherBase(
+          city: result.city,
+          description: result.description,
+          iconName: result.iconName,
+          temperature: result.temperature,
+          feelsTemp: result.feelsTemp,
+          minTemp: result.minTemp,
+          maxTemp: result.maxTemp,
+          windSpeed: result.windSpeed,
+          humidity: result.humidity,
+          pressure: result.pressure,
+          cloudiness: result.cloudiness,
+          date: result.date,
+        );
+        baseList.add(base);
+      }
+    }
+    return baseList;
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +7,7 @@ import 'package:weather/bloc/weather_bloc.dart';
 import 'package:weather/constants.dart';
 import 'package:weather/model/weather.dart';
 import 'package:weather/widgets/load_image.dart';
+import 'package:weather/widgets/show_error.dart';
 import '../utils.dart';
 
 class DaysScreen extends StatelessWidget {
@@ -48,7 +48,7 @@ class DaysScreen extends StatelessWidget {
         ),
         title: Text(
           'Прогноз $title',
-          style: tsCity,
+          style: tsMini,
           overflow: TextOverflow.fade,
         ),
       ),
@@ -65,25 +65,7 @@ class DaysScreen extends StatelessWidget {
             child: BlocConsumer<DaysBloc, DaysState>(
           listener: (context, state) {
             if (state is ErrorDaysState) {
-              Flushbar(
-                flushbarPosition: FlushbarPosition.TOP,
-                flushbarStyle: FlushbarStyle.FLOATING,
-                titleText: const Text(
-                  'Ошибка',
-                  style: tsCity,
-                ),
-                messageText: Text(
-                  state.message,
-                  style: tsMini,
-                ),
-                duration: const Duration(seconds: 5),
-                isDismissible: true,
-                borderRadius: BorderRadius.circular(15),
-                backgroundGradient: bdGradient,
-                borderWidth: 2,
-                borderColor: Colors.white,
-                margin: const EdgeInsets.only(top: 100, left: 20, right: 20),
-              ).show(context);
+              showError(context: context, error: state.message);
             }
           },
           builder: (context, state) {
@@ -231,7 +213,10 @@ class DaysScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  LoadImage(iconName: weather.iconName),
+                  LoadImage(
+                    iconName: weather.iconName,
+                    qualifier: RepositoryQualifier.openWeatherMap,
+                  ),
                   Column(
                     children: [
                       Text(

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,21 +30,20 @@ class _CityScreenState extends State<CityScreen> {
 
   bool checkCity = true;
   double scale = 1.0;
-  double umbrellaScale = 0.5;
-  TextStyle style = tsCity;
+  double umbrellaScale = 2.0;
+  TextStyle style = tsCityStart;
   RepositoryQualifier qualifier = RepositoryQualifier.openWeatherMap;
 
   void _changeScale() {
-    setState(() => scale = scale == 1.0 ? 2.0 : 1.0);
+    setState(() => scale = scale == 1.0 ? 1.2 : 1.0);
   }
 
   void _changeUmbrellaScale() {
-    setState(() => umbrellaScale = umbrellaScale == 0.0 ? 2.0 : 0.0);
+    setState(() => umbrellaScale = umbrellaScale == 1.0 ? 2.0 : 1.0);
   }
 
   void _changeStyle() {
-    setState(() => style =
-        style == tsCity ? tsTitleBolt.copyWith(color: Colors.white) : tsCity);
+    setState(() => style = style == tsCityStart ? tsCityEnd : tsCityStart);
   }
 
   void choice(RepositoryQualifier value) {
@@ -60,7 +57,7 @@ class _CityScreenState extends State<CityScreen> {
     if (checkCity && context.read<WeatherBloc>().state.city.isNotEmpty) {
       _controller.text = context.read<WeatherBloc>().state.city;
       checkCity = false;
-      qualifier = context.read<WeatherBloc>().getCurrentRepositoryQualifier();
+      qualifier = context.read<WeatherBloc>().state.qualifier;
     }
 
     return Scaffold(
@@ -71,125 +68,157 @@ class _CityScreenState extends State<CityScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Transform.rotate(
-              //   angle: pi / 2,
-              //   child: Text.rich(
-              //     textAlign: TextAlign.left,
-              //     TextSpan(
-              //       text: 'Прогноз\n',
-              //       style: tsBigTemp.copyWith(fontSize: 90),
-              //       children: [
-              //         TextSpan(
-              //           text: 'Погоды',
-              //           style: tsLite.copyWith(fontSize: 100),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-              // AnimatedScale(
-              //   scale: umbrellaScale,
-              //   duration: const Duration(seconds: 1),
-              //   curve: Curves.fastOutSlowIn,
-              //   child: const Image(
-              //     image: AssetImage('assets/images/weather.png'),
-              //     height: 100,
-              //     width: 100,
-              //     color: Colors.black,
-              //   ),
-              // ),
-              const SizedBox(height: 25),
-              Container(height: 100, width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(brDef)),
-                  color: Colors.black,
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 3,
+                child: Stack(
+                  children: [
+                    Hero(tag: 'img',
+                      child: Align(
+                        alignment: const FractionalOffset(0.5, 0.5),
+                        child: AnimatedScale(
+                          scale: umbrellaScale,
+                          duration: const Duration(seconds: 1),
+                          curve: Curves.fastOutSlowIn,
+                          child: const Image(
+                            image: AssetImage('assets/images/weather.png'),
+                            height: 100,
+                            width: 100,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Hero(
+                      tag: 'up',
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: Center(
+                          child: AnimatedScale(
+                            scale: scale,
+                            duration: const Duration(seconds: 1),
+                            curve: Curves.fastOutSlowIn,
+                            child: AnimatedDefaultTextStyle(
+                              style: style,
+                              duration: const Duration(seconds: 1),
+                              child: const RotatedBox(
+                                quarterTurns: 1,
+                                child: Text(
+                                  'Прогноз\nПогоды',
+                                  // style: tsCity,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                child: TextField(
-                 controller: _controller,
-                 decoration: InputDecoration(
-                   border: InputBorder.none,
-                   hintText: 'Введите город',
-                   hintStyle: tsLite.copyWith(color: currentClr),
-                 ),
-                 style: tsLite.copyWith(color: currentClr),
-                                      ),
               ),
-              const SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Найти',
-                    style: tsDefault,
+              const SizedBox(height: 25),
+              Hero(
+                tag: 'black',
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    decoration: decorationFill,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _controller,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Введите город',
+                              hintStyle: tsLite.copyWith(color: currentClr),
+                            ),
+                            style: tsLite.copyWith(color: currentClr),
+                          ),
+                        ),
+                        AnimatedScale(
+                          scale: scale,
+                          duration: const Duration(seconds: 1),
+                          curve: Curves.fastOutSlowIn,
+                          onEnd: () {
+                            context
+                                .read<WeatherBloc>()
+                                .add(ChangeRepositoryEvent(qualifier));
+                            context.read<WeatherBloc>().add(LoadWeatherEvent());
+                            Navigator.pushReplacementNamed(
+                                context, WeatherScreen.route);
+                          },
+                          child: ArrowButton(
+                              backgroundColor: currentClr,
+                              execute: () {
+                                context
+                                    .read<WeatherBloc>()
+                                    .add(CityEvent(_controller.text));
+                                _changeScale();
+                                _changeStyle();
+                                _changeUmbrellaScale();
+                              }),
+                        ),
+                      ],
+                    ),
                   ),
-                  ArrowButton(
-                    execute: () {
-                      context
-                          .read<WeatherBloc>()
-                          .add(ChangeRepositoryEvent(qualifier));
-                      context
-                          .read<WeatherBloc>()
-                          .add(CityEvent(_controller.text));
-                      context.read<WeatherBloc>().add(LoadWeatherEvent());
-                      Navigator.pushReplacementNamed(
-                          context, WeatherScreen.route);
-                    },
-                  ),
-                ],
+                ),
               ),
 
+              ///выбор репозитория
               const SizedBox(height: 15),
-              Container(
-                height: 300,
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Выбор репозитория:',
+                  style: tsDefault.copyWith(fontSize: 18),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 4,
                 child: ListView.builder(
                   itemCount: RepositoryQualifier.values.length,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          decoration:
-                              RepositoryQualifier.values[index] == qualifier
-                                  ? decorationFill
-                                  : const BoxDecoration(),
-                          child: Row(
-                            children: [
-                              Text(
-                                RepositoryQualifier.values[index].name,
-                                textAlign: TextAlign.center,
-                                style: RepositoryQualifier.values[index] ==
-                                        qualifier
-                                    ? tsBigTemp.copyWith(
-                                        fontSize: 22,
-                                        color: currentClr,
-                                      )
-                                    : tsLite.copyWith(fontSize: 22),
-                              ),
-                              if (RepositoryQualifier.values[index] !=
-                                  qualifier) ...[
-                                Transform.rotate(
-                                  angle: pi,
-                                  child: ArrowButton(
-                                    execute: () {
-                                      choice(
-                                          RepositoryQualifier.values[index]);
-                                    },
-                                  ),
+                      child: GestureDetector(
+                        onTap: () => choice(RepositoryQualifier.values[index]),
+                        child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            decoration:
+                                RepositoryQualifier.values[index] == qualifier
+                                    ? decorationFill
+                                    : const BoxDecoration(),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                if (RepositoryQualifier.values[index] ==
+                                    qualifier) ...[
+                                  CustomPaint(
+                                    size: const Size(60, 25),
+                                    painter:
+                                        ArrowCustomPainter(color: currentClr),
+                                  )
+                                ],
+                                Text(
+                                  RepositoryQualifier.values[index].name,
+                                  textAlign: TextAlign.center,
+                                  style: RepositoryQualifier.values[index] ==
+                                          qualifier
+                                      ? tsBigTemp.copyWith(
+                                          fontSize: 22,
+                                          color: currentClr,
+                                        )
+                                      : tsLite.copyWith(fontSize: 22),
                                 ),
-                              ] else ...[
-                                CustomPaint(
-                                  size: const Size(75, 25),
-                                  painter:
-                                      ArrowCustomPainter(color: currentClr),
-                                )
                               ],
-                            ],
-                          )),
+                            )),
+                      ),
                     );
                   },
                 ),
-              )
+              ),
 
               ///end
             ],

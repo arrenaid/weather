@@ -40,3 +40,9 @@ String getTimeTimestamp(double time){
   final date = DateTime.fromMicrosecondsSinceEpoch(time.toInt());
   return DateFormat.Hm().format(date);
 }
+DateFormat getDateFormat(RepositoryQualifier qualifier){
+  switch(qualifier){
+    case RepositoryQualifier.openWeatherMap: return DateFormat("yyyy-MM-dd hh:mm:ss");
+    case RepositoryQualifier.weatherBit: return DateFormat("yyyy-MM-dd");
+  }
+}

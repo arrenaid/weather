@@ -2,16 +2,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class ArrowCustomPainter extends CustomPainter {
-  final Color color;
+  final Color? color;
 
-  ArrowCustomPainter({
-    this.color = Colors.black,
-  });
+  ArrowCustomPainter({this.color});
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint();
-    paint.color = color;
+    paint.color = color ?? Colors.black;
     paint.style = PaintingStyle.stroke;
     paint.strokeCap = StrokeCap.round;
     paint.strokeWidth = size.height / 10;
@@ -292,12 +290,11 @@ class UvIndexCustomPainter extends CustomPainter {
       paint.style = i > index ? PaintingStyle.fill : PaintingStyle.stroke;
       paint.strokeCap = StrokeCap.round;
       paint.strokeWidth = stroke;
-      if(i <= index){
+      if (i <= index) {
         canvas.drawCircle(Offset(first * i, size.height / 2), 10, paintBg);
       }
       canvas.drawCircle(Offset(first * i, size.height / 2), 10, paint);
     }
-
   }
 
   Color? getIndexColor(int index) {

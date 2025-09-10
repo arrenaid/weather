@@ -9,8 +9,6 @@ import 'package:weather/constants.dart';
 import 'package:weather/model/weather_base.dart';
 import 'package:weather/model/weather_base_unit.dart';
 import 'package:weather/service/repository_base.dart';
-import 'package:weather/service/weatherbit_repository.dart';
-import '../service/weather_map_helper.dart';
 
 part 'weather_event.dart';
 
@@ -24,11 +22,11 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
   final String _sharedCityKey = 'city';
   final String _sharedRepositoryKey = 'repository';
-  final List<RepositoryBase> repositories;
+  final Map<RepositoryQualifier,RepositoryBase> repositories;
   // final String apiKey;
 
   WeatherBloc({required this.repositories})
-      : super(CityState('', repositories.first)) {
+      : super(CityState('', repositories.keys.first)) {
     on<CityEvent>(_cityChange);
     on<LoadWeatherEvent>(/*_connect*/ _loadCurrentWeather);
     on<LoadForecastEvent>(_loadForecast);
@@ -39,16 +37,16 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
   _load(LoadCitySharedPreferencesEvent event, Emitter emit) async {
     String city = await _loadCity();
-    var rep = await _loadRepository();
-    emit(CityState(city, _selectedRepository(rep) ?? state.repository ));
+    RepositoryQualifier qualifier = await _loadRepository();
+    emit(CityState(city, qualifier));
   }
 
   _error(ErrorEvent event, Emitter emit) {
-    emit(ErrorState(event.message, state.city,state.repository));
+    emit(ErrorState(event.message, event.runtimeType.toString(), state.city,state.qualifier));
   }
 
   _cityChange(CityEvent event, Emitter emit) {
-    emit(CityState(event.city,state.repository));
+    emit(CityState(event.city,state.qualifier));
   }
 
   ///old
@@ -72,15 +70,15 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   _loadCurrentWeather(LoadWeatherEvent event, Emitter emit) async {
     try {
     WeatherBase? currentWeather =
-        await state.repository.getCurrentWeather(state.city);
+        await repositories[state.qualifier]!.getCurrentWeather(state.city);
 
     _saveCity(state.city);
-    emit(LoadWeatherState(currentWeather!, state.city, state.repository));
-    }on SocketException catch (e) { emit(ErrorState('SocketException: $e', state.city, state.repository));
-    }on HttpException catch (e){  emit(ErrorState('HttpException: $e', state.city, state.repository));
-    }on FormatException catch (e){  emit(ErrorState('FormatException: $e', state.city, state.repository));
+    emit(LoadWeatherState(currentWeather!, state.city, state.qualifier));
+    }on SocketException catch (e) { emit(ErrorState('SocketException: $e', e.runtimeType.toString(), state.city, state.qualifier));
+    }on HttpException catch (e){  emit(ErrorState('HttpException: $e', e.runtimeType.toString(), state.city, state.qualifier));
+    }on FormatException catch (e){  emit(ErrorState('FormatException: $e', e.runtimeType.toString(), state.city, state.qualifier));
     } catch (e) {
-      emit(ErrorState(e.toString(), state.city, state.repository));
+      emit(ErrorState(e.toString(), e.runtimeType.toString(), state.city, state.qualifier));
     }
   }
 
@@ -90,17 +88,17 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       Emitter emit) async {
     try {
       List<WeatherBase>? dailyForecast =
-          await state.repository.getForecast(state.city);
+          await repositories[state.qualifier]!.getForecast(state.city);
 
-      emit(LoadWeatherState(event.weather.toUnit(dailyForecast!), state.city, state.repository));
+      emit(LoadWeatherState(event.weather.toUnit(dailyForecast!), state.city, state.qualifier));
     } on SocketException catch (e) {
-      emit(ErrorState('SocketException: $e', state.city, state.repository));
+      emit(ErrorState('SocketException: $e', e.runtimeType.toString(), state.city, state.qualifier));
     } on HttpException catch (e) {
-      emit(ErrorState('HttpException: $e', state.city, state.repository));
+      emit(ErrorState('HttpException: $e', e.runtimeType.toString(), state.city, state.qualifier));
     } on FormatException catch (e) {
-      emit(ErrorState('FormatException: $e', state.city, state.repository));
+      emit(ErrorState('FormatException: $e', e.runtimeType.toString(), state.city, state.qualifier));
     } catch (e) {
-      emit(ErrorState(e.toString(), state.city, state.repository));
+      emit(ErrorState('${e.runtimeType}: ${e.toString()}', e.runtimeType.toString(), state.city, state.qualifier));
     }
   }
 
@@ -119,7 +117,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       String? result = prefs.getString(_sharedCityKey);
       return result ?? '';
     } catch (e) {
-      print("--error--$e");
+      debugPrint("--error--$e");
       return '';
     }
   }
@@ -129,7 +127,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString(_sharedRepositoryKey, rep);
     } catch (e) {
-      print("--error--$e");
+      debugPrint("-> save repository ->  --error--$e");
     }
   }
 
@@ -139,44 +137,21 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       String? result = prefs.getString(_sharedRepositoryKey);
       var value;
       for( var e in RepositoryQualifier.values){
-        if (e.name == result){
+        if (e.name.toString() == result){
           value = e;
+          debugPrint('-> load repository -> $e , value = ${value.toString()}');
         }
       }
 
       return value ?? RepositoryQualifier.values.first;
     } catch (e) {
-      print("--error--$e");
+      debugPrint("-> load repository -> --error-- $e");
       return RepositoryQualifier.values.first;
     }
   }
 
-  RepositoryBase? _selectedRepository(RepositoryQualifier value) {
-    switch(value){
-      case RepositoryQualifier.openWeatherMap:
-        for(var e in repositories ){
-          if(e is WeatherMapHelper){
-            return e;
-          }
-        }
-        break;
-        default:
-        for(var e in repositories ){
-          if(e is WeatherBitRepository){
-            return e;
-          }
-        }
-    }
-  }
-  RepositoryQualifier getCurrentRepositoryQualifier() {
-      if (state.repository is WeatherBitRepository) {
-        return RepositoryQualifier.weatherBit;
-      }
-      return RepositoryQualifier.openWeatherMap;
-  }
-
   FutureOr<void> _changeRepositoryQualifier(ChangeRepositoryEvent event, Emitter<WeatherState> emit) {
     _saveRepository(event.value.name);
-    emit(CityState(state.city, _selectedRepository(event.value) ?? state.repository ));
+    emit(CityState(state.city, event.value));
   }
 }

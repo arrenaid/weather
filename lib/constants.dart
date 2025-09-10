@@ -23,11 +23,22 @@ const TextStyle tsLite = TextStyle(
   fontSize: 30,
   color: Colors.black87,
 );
-const TextStyle tsCity = TextStyle(
+const TextStyle tsCityStart = TextStyle(
+  fontFamily: 'Effra',
+  fontWeight: FontWeight.w600,
+  fontSize: 90,
+  letterSpacing: -10,
+  wordSpacing: -5,
+  color: Colors.black,
+  overflow: TextOverflow.fade,
+);
+const TextStyle tsCityEnd = TextStyle(
   fontFamily: 'Effra',
   fontWeight: FontWeight.w300,
-  fontSize: 25,
-  color: Colors.white,
+  fontSize: 91,
+  letterSpacing: -11,
+  color: Colors.black,
+  overflow: TextOverflow.fade,
 );
 const TextStyle tsMiniLite = TextStyle(
   fontFamily: 'Effra',

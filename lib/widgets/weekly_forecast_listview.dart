@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:weather/utils.dart';
 import 'package:weather/widgets/load_image.dart';
 import '../constants.dart';
 import '../model/weather_base.dart';
@@ -8,9 +9,11 @@ class WeeklyForecastListView extends StatelessWidget {
   const WeeklyForecastListView({
     super.key,
     required this.forecast,
+    required this.qualifier,
   });
 
   final List<WeatherBase> forecast;
+  final RepositoryQualifier qualifier;
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +38,14 @@ class WeeklyForecastListView extends StatelessWidget {
                       '${forecast[index].temperature.round()}°',
                       style: tsDefault,
                     ),
-                    LoadImage(iconName: forecast[index].iconName, isBit: true,height: 30,),
-                    // const Image(
-                    //   image: AssetImage('assets/images/weather.png'),
-                    //   height: 30,
-                    //   width: 30,
-                    //   color: Colors.black,
-                    // ),
+                    LoadImage(
+                      iconName: forecast[index].iconName,
+                      qualifier: qualifier,
+                      height: 30,
+                    ),
                     Text(
-              DateFormat.MMMd().format(DateFormat("yyyy-MM-dd").parse(forecast[index].date)),
+                      DateFormat.MMMd().format(
+                          getDateFormat(qualifier).parse(forecast[index].date)),
                       style: tsDefault.copyWith(fontSize: 18),
                     ),
                   ],

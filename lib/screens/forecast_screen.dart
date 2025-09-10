@@ -1,10 +1,10 @@
 import 'dart:math';
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/model/weather_base.dart';
 import 'package:weather/widgets/arrow_button.dart';
+import 'package:weather/widgets/show_error.dart';
 import '../bloc/weather_bloc.dart';
 import '../constants.dart';
 import '../utils.dart';
@@ -33,25 +33,7 @@ class ForecastScreen extends StatelessWidget {
           child: BlocConsumer<WeatherBloc, WeatherState>(
               listener: (context, state) {
             if (state is ErrorState) {
-              Flushbar(
-                flushbarPosition: FlushbarPosition.TOP,
-                flushbarStyle: FlushbarStyle.FLOATING,
-                titleText: const Text(
-                  'Ошибка',
-                  style: tsCity,
-                ),
-                messageText: Text(
-                  state.message,
-                  style: tsMini,
-                ),
-                duration: const Duration(seconds: 5),
-                isDismissible: true,
-                borderRadius: BorderRadius.circular(15),
-                backgroundGradient: bdGradient,
-                borderWidth: 2,
-                borderColor: Colors.white,
-                margin: const EdgeInsets.only(top: 100, left: 20, right: 20),
-              ).show(context);
+             showError(context: context, error: state.message);
             }
           }, builder: (context, state) {
             if (state is LoadWeatherState) {
@@ -61,6 +43,7 @@ class ForecastScreen extends StatelessWidget {
                       .sublist(1, state.weather.weeklyForecast!.length),
                   city: state.city,
                   color: currentClr,
+                  qualifier: state.qualifier,
                 );
               } else {
                 return Container();
@@ -81,11 +64,13 @@ class ForecastListView extends StatelessWidget {
     required this.forecast,
     required this.city,
     required this.color,
+    required this.qualifier,
   });
 
   final List<WeatherBase> forecast;
   final String city;
   final Color color;
+  final RepositoryQualifier qualifier;
 
   @override
   Widget build(BuildContext context) {
@@ -99,10 +84,11 @@ class ForecastListView extends StatelessWidget {
             child: Align(
               alignment: const FractionalOffset(0, 0),
               child: Transform.rotate(
-                angle: pi,
+                  angle: pi,
                   child: ArrowButton(execute: () => Navigator.pop(context))),
             ),
           ),
+
           ///title
           Text(
             '$city forecast'.toUpperCase(),
@@ -118,9 +104,11 @@ class ForecastListView extends StatelessWidget {
             itemBuilder: (context, index) {
               return ForecastDailyCard(
                 backgroundColor: color,
-                  weather: forecast[index],
-                  color: getCurrentColor(),
-                  isSpecial: index % 2 == 0);
+                weather: forecast[index],
+                color: getCurrentColor(),
+                isSpecial: index % 2 == 0,
+                qualifier: qualifier,
+              );
             },
           ),
           const SizedBox(height: 10),
@@ -143,12 +131,14 @@ class ForecastDailyCard extends StatelessWidget {
     required this.weather,
     required this.isSpecial,
     required this.backgroundColor,
+    required this.qualifier,
   });
 
   final WeatherBase weather;
   final Color color;
   final bool isSpecial;
   final Color backgroundColor;
+  final RepositoryQualifier qualifier;
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +181,10 @@ class ForecastDailyCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       LoadImage(
-                          iconName: weather.iconName, height: 50, isBit: true),
+                        iconName: weather.iconName,
+                        height: 50,
+                        qualifier: qualifier,
+                      ),
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50),

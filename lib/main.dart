@@ -8,14 +8,9 @@ import 'package:weather/screens/forecast_screen.dart';
 import 'package:weather/screens/weather_screen.dart';
 import 'package:weather/service/weather_map_helper.dart';
 import 'package:weather/service/weatherbit_repository.dart';
-
-import 'bloc/error_bloc.dart';
+import 'constants.dart';
 
 Future main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await dotenv.load(fileName: ".env");
-  // final apiKey = dotenv.get('WEATHERBIT_API_KEY');
-  // WeatherBitRepository.setApiKey(apiKey);
   runApp(const MyApp());
 }
 
@@ -24,48 +19,44 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ErrorBloc>(
-      create: (_) => ErrorBloc(),
-      child: MultiRepositoryProvider(
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(
+            create: (BuildContext context) =>
+                WeatherBitRepository()..setApiKey()),
+        RepositoryProvider(
+            create: (context) => WeatherMapHelper()..setApiKey()),
+      ],
+      child: MultiBlocProvider(
         providers: [
-          RepositoryProvider(
-              create: (BuildContext context) => WeatherBitRepository(
-                      onErrorHandler: (String code, String message) {
-                    context
-                        .read<ErrorBloc>()
-                        .add(ShowError(title: code, message: message));
+          BlocProvider(
+              create: (context) => WeatherBloc(repositories: {
+                    RepositoryQualifier.openWeatherMap:
+                        RepositoryProvider.of<WeatherMapHelper>(context),
+                    RepositoryQualifier.weatherBit:
+                        RepositoryProvider.of<WeatherBitRepository>(context)
                   })
-                    ..setApiKey()),
-          RepositoryProvider(
-              create: (context) => WeatherMapHelper()..setApiKey()),
+                    ..add(LoadCitySharedPreferencesEvent())),
+          BlocProvider(create: (context) => DaysBloc())
         ],
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider(
-                create: (context) => WeatherBloc(repositories: [
-                      RepositoryProvider.of<WeatherMapHelper>(context),
-                      RepositoryProvider.of<WeatherBitRepository>(context)
-                    ])
-                      ..add(LoadCitySharedPreferencesEvent())),
-            BlocProvider(create: (context) => DaysBloc())
-          ],
-          child:
-              BlocBuilder<WeatherBloc, WeatherState>(builder: (context, state) {
-            return MaterialApp(
-                title: 'Flutter Demo',
-                theme: ThemeData(primarySwatch: Colors.blue),
-                // initialRoute: context.read<WeatherBloc>().state.city.isNotEmpty
-                //     ? WeatherScreen.route
-                //     : CityScreen.route,
-                home: state.city.isEmpty ? const CityScreen() : WeatherScreen(),
-                routes: {
-                  CityScreen.route: (context) => const CityScreen(),
-                  WeatherScreen.route: (context) => WeatherScreen(),
-                  DaysScreen.route: (context) => DaysScreen(),
-                  ForecastScreen.route: (context) => ForecastScreen(),
-                });
-          }),
-        ),
+        child:
+            BlocBuilder<WeatherBloc, WeatherState>(builder: (context, state) {
+          return MaterialApp(
+              title: 'Flutter Demo',
+              theme: ThemeData(primarySwatch: Colors.blue),
+              // initialRoute: context.read<WeatherBloc>().state.city.isNotEmpty
+              //     ? WeatherScreen.route
+              //     : CityScreen.route,
+              home: state.city.isEmpty
+                  ? const CityScreen()
+                  : const WeatherScreen(),
+              routes: {
+                CityScreen.route: (context) => const CityScreen(),
+                WeatherScreen.route: (context) => const WeatherScreen(),
+                DaysScreen.route: (context) => DaysScreen(),
+                ForecastScreen.route: (context) => const ForecastScreen(),
+              });
+        }),
       ),
     );
   }

@@ -10,18 +10,15 @@ import 'package:weather/service/repository_base.dart';
 import 'package:weather/model/weather_base.dart';
 import 'package:weather/service/weatherbit_query.dart';
 
-class WeatherBitRepository extends RepositoryBase{
+class WeatherBitRepository extends RepositoryBase {
   late final Dio _dio;
-  final Function(String, String) onErrorHandler;
   late final String _apiKey;
 
-  WeatherBitRepository({required this.onErrorHandler}) {
+  WeatherBitRepository() {
     _dio = Dio()
       ..interceptors.addAll([
         PrettyDioLogger(requestHeader: true, requestBody: true),
-        ErrorInterceptor(onErrorHandler),
       ]);
-
   }
 
   @override
@@ -53,41 +50,23 @@ class WeatherBitRepository extends RepositoryBase{
 
   @override
   Future<WeatherBase?> getCurrentWeather(String city) async {
+    Response response = await _dio.get(
+        WeatherBitQuery.baseUrl + WeatherBitQuery.currentEndPoint,
+        queryParameters: {
+          WeatherBitQuery.cityParameter: city,
+          WeatherBitQuery.keyParameter: _apiKey,
+        });
+    debugPrint(response.toString());
 
-      Response response = await _dio.get(
-          WeatherBitQuery.baseUrl + WeatherBitQuery.currentEndPoint,
-          queryParameters: {
-            WeatherBitQuery.cityParameter: city,
-            WeatherBitQuery.keyParameter: _apiKey,
-          });
-      debugPrint(response.toString());
-
-      /// dto
-      final CurrentDTO dto = CurrentDTO.fromJson(
-        ((response.data as Map<String, dynamic>)['data'] as List<dynamic>).first
-            as Map<String, dynamic>,
-      );
-      debugPrint(dto.toString());
-
-      ///dto.toDomain
-      final WeatherBase currentWeather = dto.toDomain();
-      return currentWeather;
-
-  }
-}
-
-class ErrorInterceptor extends Interceptor {
-  ErrorInterceptor(this.onErrorHandler);
-
-  Function(String, String) onErrorHandler;
-
-  @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
-    onErrorHandler(
-      err.response?.statusCode.toString() ?? 'unknown',
-      err.message.toString(),
+    /// dto
+    final CurrentDTO dto = CurrentDTO.fromJson(
+      ((response.data as Map<String, dynamic>)['data'] as List<dynamic>).first
+          as Map<String, dynamic>,
     );
-    handler.next(err);
-    // super.onError(err, handler);
+    debugPrint(dto.toString());
+
+    ///dto.toDomain
+    final WeatherBase currentWeather = dto.toDomain();
+    return currentWeather;
   }
 }
