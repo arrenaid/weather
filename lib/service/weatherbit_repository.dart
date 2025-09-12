@@ -2,13 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:weather/model/current_dto.dart';
-import 'package:weather/model/current_dto_to_domain.dart';
-import 'package:weather/model/daily_response_dto.dart';
-import 'package:weather/model/daily_response_dto_to_domain.dart';
+import 'package:weather/model/weather_bit/current_dto.dart';
+import 'package:weather/model/weather_bit/current_dto_to_domain.dart';
+import 'package:weather/model/weather_bit/daily_response_dto_to_domain.dart';
 import 'package:weather/service/repository_base.dart';
 import 'package:weather/model/weather_base.dart';
 import 'package:weather/service/weatherbit_query.dart';
+import '../model/weather_bit/daily_response_dto.dart';
 
 class WeatherBitRepository extends RepositoryBase {
   late final Dio _dio;

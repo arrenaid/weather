@@ -1,6 +1,6 @@
-import 'package:weather/model/daily_response_dto.dart';
-import 'package:weather/model/weather_base.dart';
-import '../utils.dart';
+import '../../utils.dart';
+import '../weather_base.dart';
+import 'daily_response_dto.dart';
 
 extension DailyResponseDtoToDomain on DailyResponseDTO {
   List<WeatherBase> toDomain() {

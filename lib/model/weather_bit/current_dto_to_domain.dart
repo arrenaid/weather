@@ -1,6 +1,6 @@
-import 'package:weather/model/current_dto.dart';
+import 'package:weather/model/weather_bit/current_dto.dart';
 import 'package:weather/model/weather_base.dart';
-import '../utils.dart';
+import '../../utils.dart';
 
 extension DailyResponseDtoToDomain on CurrentDTO {
   WeatherBase toDomain() {
