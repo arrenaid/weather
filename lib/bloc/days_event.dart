@@ -5,11 +5,12 @@ class DaysEvent extends Equatable{
   List<Object?> get props => [];
 }
 class LoadDaysEvent extends DaysEvent{
-  final String city;
-  const LoadDaysEvent(this.city);
+  final List<WeatherBase> forecast;
+
+  const LoadDaysEvent({required this.forecast});
 
   @override
-  List<Object?> get props => [city];
+  List<Object?> get props => [forecast];
 }
 // class ErrorDaysEvent extends DaysEvent{
 //   final String message;

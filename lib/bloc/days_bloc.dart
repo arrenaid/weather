@@ -3,39 +3,42 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/model/weather.dart';
+import 'package:weather/model/weather_base.dart';
 import 'package:weather/service/weather_map_helper.dart';
 part 'days_event.dart';
 part 'days_state.dart';
 
 class DaysBloc extends Bloc<DaysEvent, DaysState> {
-  final WeatherMapHelper client = WeatherMapHelper();
 
-  DaysBloc() : super(const DaysState([], [], 0)) {
+
+  DaysBloc() : super(
+      const DaysState(sorted: [], forecast:  [],index:  0)) {
     on<SelectedDaysEvent>(_change);
     on<LoadDaysEvent>(_forecast);
   }
 
   _forecast(LoadDaysEvent event, Emitter emit) async {
     try {
-      final forecast = await client.getForecast(event.city);
-        emit(DaysState(_getRes(state.indexSelected, forecast as List<Weather>),
-            forecast as List<Weather>, state.indexSelected));
+      // final forecast = await client.getForecast(event.city);
+      var forecast = event.forecast;
+        emit(DaysState(sorted: _sortForecast(state.index, forecast),
+            forecast: forecast,index:  state.index));
     }on SocketException catch (e) { emit(ErrorDaysState('SocketException: $e',
-        state.weathersSort,state.weathersAll, state.indexSelected));
+        state.sorted,state.forecast, state.index));
     }on HttpException catch (e){  emit(ErrorDaysState('HttpException: $e',
-        state.weathersSort,state.weathersAll, state.indexSelected));
+        state.sorted,state.forecast, state.index));
     }on FormatException catch (e){  emit(ErrorDaysState('FormatException: $e',
-        state.weathersSort,state.weathersAll, state.indexSelected));
+        state.sorted,state.forecast, state.index));
     }catch (e) {emit(ErrorDaysState(e.toString(),
-        state.weathersSort,state.weathersAll, state.indexSelected));}
+        state.sorted,state.forecast, state.index));}
   }
 
   _change(SelectedDaysEvent event, Emitter emit){
-    var getRes = _getRes(event.index, state.weathersAll);
-    emit(DaysState(getRes, state.weathersAll, event.index));
+    var getRes = _sortForecast(event.index, state.forecast);
+    emit(DaysState(sorted:  getRes,forecast:  state.forecast,index:  event.index));
   }
 
-  List<Weather> _getRes(int indexSelected, List<Weather> forecast){
+  List<WeatherBase> _sortForecast(int indexSelected, List<WeatherBase> forecast){
     switch(indexSelected){
       case 0: return forecast;
       case 1: return _toDay(forecast, '15:00');
@@ -46,9 +49,9 @@ class DaysBloc extends Bloc<DaysEvent, DaysState> {
     }
   }
 
-  List<Weather> _toDay(List<Weather> forecast, String target) {
-    List<Weather> result = [];
-    for (Weather item in forecast) {
+  List<WeatherBase> _toDay(List<WeatherBase> forecast, String target) {
+    List<WeatherBase> result = [];
+    for (var item in forecast) {
       String time = DateFormat.Hm()
           .format(DateFormat("yyyy-MM-dd hh:mm:ss").parse(item.date));
       if (time == target) {//'15:00'
@@ -58,10 +61,10 @@ class DaysBloc extends Bloc<DaysEvent, DaysState> {
     return result;
   }
 
-  List<Weather> _sortCold(List<Weather> forecast) {
-    List<Weather> result = [];
+  List<WeatherBase> _sortCold(List<WeatherBase> forecast) {
+    List<WeatherBase> result = [];
     int count = 0;
-    for (Weather item in forecast) {
+    for (var item in forecast) {
       //отделяю прогнозы по дням проверяя '15:00'
       String time = DateFormat.Hm()
           .format(DateFormat("yyyy-MM-dd hh:mm:ss").parse(item.date));
@@ -76,7 +79,7 @@ class DaysBloc extends Bloc<DaysEvent, DaysState> {
       }
     }
     //сортировка по возростанию температуры
-    result.sort((Weather a, Weather b) => a.temperature.compareTo(b.temperature));
+    result.sort((WeatherBase a, WeatherBase b) => a.temperature.compareTo(b.temperature));
     return result;
   }
 }

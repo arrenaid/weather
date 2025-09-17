@@ -30,35 +30,35 @@ class WeatherScreen extends StatelessWidget {
     return Scaffold(
       //key: WeatherScreen.globalKey,
       backgroundColor: currentClr,
-      body: GestureDetector(
-        onVerticalDragEnd: (details) {
-          if (details.velocity.pixelsPerSecond.dy > 500) {
-            context.read<WeatherBloc>().add(LoadWeatherEvent());
-          }
-        },
-        onHorizontalDragEnd: (dragEndDetails) {
-          if (dragEndDetails.primaryVelocity! < 500) {
-            context
-                .read<DaysBloc>()
-                .add(LoadDaysEvent(context.read<WeatherBloc>().state.city));
-            Navigator.pushNamed(
-              context,
-              DaysScreen.route,
-            );
-          } else if (dragEndDetails.primaryVelocity! > 500) {
-            Navigator.pushNamed(context, CityScreen.route);
-          }
-        },
-        child: SafeArea(
-          child: BlocConsumer<WeatherBloc, WeatherState>(
-            listener: (context, state) {
-              if (state is ErrorState) {
-               showErrorFlushbar(context: context, error: state.message);
-              }
-            },
-            builder: (buildContext, state) {
-              if (state is LoadWeatherState) {
-                return SingleChildScrollView(
+      body: SafeArea(
+        child: BlocConsumer<WeatherBloc, WeatherState>(
+          listener: (context, state) {
+            if (state is ErrorState) {
+             showErrorFlushbar(context: context, error: state.message);
+            }
+          },
+          builder: (buildContext, state) {
+            if (state is LoadWeatherState) {
+              return GestureDetector(
+                onVerticalDragEnd: (details) {
+                  if (details.velocity.pixelsPerSecond.dy > 500) {
+                    context.read<WeatherBloc>().add(LoadWeatherEvent());
+                  }
+                },
+                onHorizontalDragEnd: (dragEndDetails) {
+                  if (dragEndDetails.primaryVelocity! < 500) {
+                    context
+                        .read<DaysBloc>()
+                        .add(LoadDaysEvent(forecast: state.weather.weeklyForecast ?? [] ));
+                    Navigator.pushNamed(
+                      context,
+                      DaysScreen.route,
+                    );
+                  } else if (dragEndDetails.primaryVelocity! > 500) {
+                    Navigator.pushNamed(context, CityScreen.route);
+                  }
+                },
+                child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   physics: const BouncingScrollPhysics(),
                   child: Padding(
@@ -235,30 +235,30 @@ class WeatherScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                );
-              }
-              if (state is ErrorState) {
-                return DefaultErrorWidget(
-                  currentClr: currentClr,
-                  message: state.message,
-                  type: state.type,
-                );
-              }
-              if (state is CityState) {
-                context.read<WeatherBloc>().add(LoadWeatherEvent());
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    backgroundColor: Colors.black,
-                  ),
-                );
-              }
-              return const LinearProgressIndicator(
-                color: Colors.white,
-                backgroundColor: Colors.black,
+                ),
               );
-            },
-          ),
+            }
+            if (state is ErrorState) {
+              return DefaultErrorWidget(
+                currentClr: currentClr,
+                message: state.message,
+                type: state.type,
+              );
+            }
+            if (state is CityState) {
+              context.read<WeatherBloc>().add(LoadWeatherEvent());
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  backgroundColor: Colors.black,
+                ),
+              );
+            }
+            return const LinearProgressIndicator(
+              color: Colors.white,
+              backgroundColor: Colors.black,
+            );
+          },
         ),
       ),
     );

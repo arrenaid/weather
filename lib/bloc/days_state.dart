@@ -1,19 +1,25 @@
 part of 'days_bloc.dart';
 
-class DaysState extends Equatable{
-  final List<Weather> weathersSort;
-  final List<Weather> weathersAll;
-  final int indexSelected;
-  const DaysState(this.weathersSort, this.weathersAll, this.indexSelected) ;
+class DaysState extends Equatable {
+  final List<WeatherBase> sorted;
+  final List<WeatherBase> forecast;
+  final int index;
+
+  const DaysState({
+    required this.sorted,
+    required this.forecast,
+    required this.index,
+  });
 
   @override
-  List<Object?> get props => [weathersSort, weathersAll, indexSelected];
+  List<Object?> get props => [sorted, forecast, index];
 }
-class ErrorDaysState extends DaysState{
+
+class ErrorDaysState extends DaysState {
   final String message;
-   const ErrorDaysState(this.message, weathersSort,
-       weathersAll, indexSelected)
-       : super(weathersSort, weathersAll, indexSelected);
+
+  const ErrorDaysState(this.message, weathersSort, weathersAll, indexSelected)
+      : super(sorted: weathersSort, forecast:  weathersAll,index: indexSelected);
 
   @override
   List<Object?> get props => [message];
