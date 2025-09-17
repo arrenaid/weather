@@ -46,3 +46,25 @@ DateFormat getDateFormat(RepositoryQualifier qualifier){
     case RepositoryQualifier.weatherBit: return DateFormat("yyyy-MM-dd");
   }
 }
+
+String? getSunRiseOrSet(double? time, String? timezone) {
+  if (timezone != null && time != null) {
+    var rise = getTimeTimestamp(time);
+    return getLocalTime(time: rise, zone: timezone);
+  }
+  return null;
+}
+
+String? getLocalTimeInUtcOnTimezone(double? utc, double? timezone){
+  if(utc != null){
+    DateTime time =DateTime.fromMillisecondsSinceEpoch(utc.toInt() * 1000, isUtc: true);
+    // DateTime norm = DateFormat("yyyy-MM-dd HH:mm:ss").parse(time!.toString(), true);
+    if(timezone != null){
+      DateTime result = time.add(Duration(seconds: timezone.toInt()));
+      debugPrint("\n>local time: utc - $utc, time - $time, timezone - $timezone, result  - $result");
+      return DateFormat.Hm().format(result);
+    }
+
+  }
+  return null;
+}

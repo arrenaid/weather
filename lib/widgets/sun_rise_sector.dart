@@ -46,7 +46,7 @@ class SunRiseSector extends StatelessWidget {
                     style: tsLite.copyWith(fontSize: 20, color: Colors.black),
                   ),
                   Text(
-                    getLocalTime(time: sunRise!, zone: timeZone!),
+                    sunRise!,
                     style: tsDefault.copyWith(color: Colors.black),
                   ),
                 ],
@@ -82,7 +82,6 @@ class SunRiseSector extends StatelessWidget {
                       alignment: AlignmentGeometry.centerRight,
                       child: Text(
                         getDayTime(sunSet!, sunRise!),
-                        //getNightTime(sunRise!, sunSet!),
                         style: tsDefault,
                       ),
                     ),
@@ -101,7 +100,7 @@ class SunRiseSector extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      getLocalTime(time: sunSet!, zone: timeZone!),
+                      sunSet!,
                       style: tsDefault.copyWith(color: color),
                     ),
                     Text(

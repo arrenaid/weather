@@ -6,6 +6,7 @@ import 'package:weather/screens/city_screen.dart';
 import 'package:weather/screens/days_screen.dart';
 import 'package:weather/screens/forecast_screen.dart';
 import 'package:weather/screens/weather_screen.dart';
+import 'package:weather/service/open_weather_map_repository.dart';
 import 'package:weather/service/weather_map_helper.dart';
 import 'package:weather/service/weatherbit_repository.dart';
 import 'constants.dart';
@@ -25,14 +26,14 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>
                 WeatherBitRepository()..setApiKey()),
         RepositoryProvider(
-            create: (context) => WeatherMapHelper()..setApiKey()),
+            create: (context) => OpenWeatherMapRepository()..setApiKey()),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
               create: (context) => WeatherBloc(repositories: {
                     RepositoryQualifier.openWeatherMap:
-                        RepositoryProvider.of<WeatherMapHelper>(context),
+                        RepositoryProvider.of<OpenWeatherMapRepository>(context),
                     RepositoryQualifier.weatherBit:
                         RepositoryProvider.of<WeatherBitRepository>(context)
                   })

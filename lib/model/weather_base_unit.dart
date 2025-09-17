@@ -23,7 +23,7 @@ extension WeatherBaseUnit on WeatherBase {
       chanceOfPrecipitation: forecast.first.chanceOfPrecipitation,
       snowDepth: forecast.first.snowDepth,
       sunRise: sunRise ?? forecast.first.sunRise,
-      sunSet: sunSet,
+      sunSet: sunSet ?? forecast.first.sunSet,
       uvIndex: uvIndex,
       angleElevationSun: angleElevationSun,
       angleHorlySun: angleHorlySun,

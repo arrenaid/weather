@@ -26,7 +26,7 @@ class DaysScreen extends StatelessWidget {
   ];
   late final Color currentClr;
   late final Color secondClr;
-  late String title;
+  late final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,7 @@ class DaysScreen extends StatelessWidget {
             child: BlocConsumer<DaysBloc, DaysState>(
           listener: (context, state) {
             if (state is ErrorDaysState) {
-              showError(context: context, error: state.message);
+              showErrorFlushbar(context: context, error: state.message);
             }
           },
           builder: (context, state) {

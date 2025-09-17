@@ -7,8 +7,6 @@ import 'package:weather/model/weather.dart';
 import 'package:weather/model/weather_base.dart';
 import 'package:weather/service/repository_base.dart';
 
-// const _apiKey = '66e25765dcbcbb5a1a38eb7cb620c043';
-
 class WeatherMapHelper extends RepositoryBase {
   late final String _apiKey;
 

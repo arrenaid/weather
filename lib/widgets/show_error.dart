@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../constants.dart';
 
-void showError({required BuildContext context, required String error}) {
+void showErrorFlushbar({required BuildContext context, required String error}) {
   Flushbar(
     flushbarPosition: FlushbarPosition.TOP,
     flushbarStyle: FlushbarStyle.FLOATING,

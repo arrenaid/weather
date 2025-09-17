@@ -33,7 +33,7 @@ class ForecastScreen extends StatelessWidget {
           child: BlocConsumer<WeatherBloc, WeatherState>(
               listener: (context, state) {
             if (state is ErrorState) {
-             showError(context: context, error: state.message);
+             showErrorFlushbar(context: context, error: state.message);
             }
           }, builder: (context, state) {
             if (state is LoadWeatherState) {

@@ -53,7 +53,7 @@ class WeatherScreen extends StatelessWidget {
           child: BlocConsumer<WeatherBloc, WeatherState>(
             listener: (context, state) {
               if (state is ErrorState) {
-               showError(context: context, error: state.message);
+               showErrorFlushbar(context: context, error: state.message);
               }
             },
             builder: (buildContext, state) {
@@ -517,7 +517,7 @@ class DefaultErrorWidget extends StatelessWidget {
           ),
           Text(
             message,
-            maxLines: 2,
+            maxLines: 5,
             style: tsLite.copyWith(
               fontSize: 24,
               //fontWeight: FontWeight.bold,
@@ -527,7 +527,7 @@ class DefaultErrorWidget extends StatelessWidget {
           ),
           Text(
             type ?? 'network  access'.toUpperCase(),
-            maxLines: 5,
+            maxLines: 1,
             style: TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
