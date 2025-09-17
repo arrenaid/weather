@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather/bloc/days_bloc.dart';
+import 'package:weather/bloc/hourly_forecast_bloc.dart';
 import 'package:weather/bloc/weather_bloc.dart';
 import 'package:weather/screens/city_screen.dart';
-import 'package:weather/screens/days_screen.dart';
+import 'package:weather/screens/hourly_forecast_screen.dart';
 import 'package:weather/screens/forecast_screen.dart';
 import 'package:weather/screens/weather_screen.dart';
 import 'package:weather/service/open_weather_map_repository.dart';
-import 'package:weather/service/weather_map_helper.dart';
 import 'package:weather/service/weatherbit_repository.dart';
 import 'constants.dart';
 
@@ -38,7 +37,7 @@ class MyApp extends StatelessWidget {
                         RepositoryProvider.of<WeatherBitRepository>(context)
                   })
                     ..add(LoadCitySharedPreferencesEvent())),
-          BlocProvider(create: (context) => DaysBloc())
+          BlocProvider(create: (context) => HourlyForecastBloc())
         ],
         child:
             BlocBuilder<WeatherBloc, WeatherState>(builder: (context, state) {
@@ -54,7 +53,7 @@ class MyApp extends StatelessWidget {
               routes: {
                 CityScreen.route: (context) => const CityScreen(),
                 WeatherScreen.route: (context) => const WeatherScreen(),
-                DaysScreen.route: (context) => DaysScreen(),
+                HourlyForecastScreen.route: (context) => HourlyForecastScreen(),
                 ForecastScreen.route: (context) => const ForecastScreen(),
               });
         }),

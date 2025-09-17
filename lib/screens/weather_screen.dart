@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:weather/bloc/days_bloc.dart';
+import 'package:weather/bloc/hourly_forecast_bloc.dart';
 import 'package:weather/bloc/weather_bloc.dart';
 import 'package:weather/constants.dart';
 import 'package:weather/model/weather_base.dart';
 import 'package:weather/screens/city_screen.dart';
-import 'package:weather/screens/days_screen.dart';
+import 'package:weather/screens/hourly_forecast_screen.dart';
 import 'package:weather/screens/forecast_screen.dart';
 import 'package:weather/utils.dart';
 import 'package:weather/widgets/arrow_paint.dart';
@@ -28,13 +28,12 @@ class WeatherScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Color currentClr = getCurrentColor();
     return Scaffold(
-      //key: WeatherScreen.globalKey,
       backgroundColor: currentClr,
       body: SafeArea(
         child: BlocConsumer<WeatherBloc, WeatherState>(
           listener: (context, state) {
             if (state is ErrorState) {
-             showErrorFlushbar(context: context, error: state.message);
+              showErrorFlushbar(context: context, error: state.message);
             }
           },
           builder: (buildContext, state) {
@@ -47,12 +46,11 @@ class WeatherScreen extends StatelessWidget {
                 },
                 onHorizontalDragEnd: (dragEndDetails) {
                   if (dragEndDetails.primaryVelocity! < 500) {
-                    context
-                        .read<DaysBloc>()
-                        .add(LoadDaysEvent(forecast: state.weather.weeklyForecast ?? [] ));
+                    context.read<HourlyForecastBloc>().add(SetForecastEvent(
+                        forecast: state.weather.weeklyForecast ?? []));
                     Navigator.pushNamed(
                       context,
-                      DaysScreen.route,
+                      HourlyForecastScreen.route,
                     );
                   } else if (dragEndDetails.primaryVelocity! > 500) {
                     Navigator.pushNamed(context, CityScreen.route);
@@ -338,12 +336,18 @@ class ForecastSector extends StatelessWidget {
                   'Прогноз', // на ${weather.weeklyForecast!.length} дней
                   style: tsDefault.copyWith(fontSize: 25),
                 ),
-                ArrowButton(
-                  execute: () => Navigator.pushNamed(
+                ArrowButton(execute: () {
+                  if (qualifier == RepositoryQualifier.openWeatherMap) {
+                    context.read<HourlyForecastBloc>().add(SetForecastEvent(
+                        forecast: weather.weeklyForecast ?? []));
+                  }
+                  Navigator.pushNamed(
                     context,
-                    ForecastScreen.route,
-                  ),
-                ),
+                    qualifier == RepositoryQualifier.openWeatherMap
+                        ? HourlyForecastScreen.route
+                        : ForecastScreen.route,
+                  );
+                }),
               ],
             ),
             const SizedBox(height: 10),
@@ -841,16 +845,16 @@ class CloudPrecipitationSnowSector extends StatelessWidget {
               ),
               Expanded(
                   child: Hero(
-                    tag: 'img',
-                    child: SizedBox(
-                                    width: 150,
-                                    height: 150,
-                                    child: LoadImage(
+                tag: 'img',
+                child: SizedBox(
+                  width: 150,
+                  height: 150,
+                  child: LoadImage(
                     iconName: iconName,
                     qualifier: qualifier,
-                                    ),
-                                  ),
-                  )),
+                  ),
+                ),
+              )),
             ],
           ),
           const SizedBox(height: 8),

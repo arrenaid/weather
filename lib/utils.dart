@@ -1,10 +1,9 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz_data;
-
+import 'package:weather/model/weather_base.dart';
 import 'constants.dart';
 
 String getLocalTime({required String time, required String zone}) {
@@ -36,14 +35,18 @@ String getDayTime(String rise, String set) {
   debugPrint(result);
   return result;
 }
-String getTimeTimestamp(double time){
+
+String getTimeTimestamp(double time) {
   final date = DateTime.fromMicrosecondsSinceEpoch(time.toInt());
   return DateFormat.Hm().format(date);
 }
-DateFormat getDateFormat(RepositoryQualifier qualifier){
-  switch(qualifier){
-    case RepositoryQualifier.openWeatherMap: return DateFormat("yyyy-MM-dd hh:mm:ss");
-    case RepositoryQualifier.weatherBit: return DateFormat("yyyy-MM-dd");
+
+DateFormat getDateFormat(RepositoryQualifier qualifier) {
+  switch (qualifier) {
+    case RepositoryQualifier.openWeatherMap:
+      return DateFormat("yyyy-MM-dd hh:mm:ss");
+    case RepositoryQualifier.weatherBit:
+      return DateFormat("yyyy-MM-dd");
   }
 }
 
@@ -55,16 +58,30 @@ String? getSunRiseOrSet(double? time, String? timezone) {
   return null;
 }
 
-String? getLocalTimeInUtcOnTimezone(double? utc, double? timezone){
-  if(utc != null){
-    DateTime time =DateTime.fromMillisecondsSinceEpoch(utc.toInt() * 1000, isUtc: true);
-    // DateTime norm = DateFormat("yyyy-MM-dd HH:mm:ss").parse(time!.toString(), true);
-    if(timezone != null){
+String? getLocalTimeInUtcOnTimezone(double? utc, double? timezone) {
+  if (utc != null) {
+    DateTime time =
+        DateTime.fromMillisecondsSinceEpoch(utc.toInt() * 1000, isUtc: true);
+    if (timezone != null) {
       DateTime result = time.add(Duration(seconds: timezone.toInt()));
-      debugPrint("\n>local time: utc - $utc, time - $time, timezone - $timezone, result  - $result");
       return DateFormat.Hm().format(result);
     }
-
   }
   return null;
+}
+
+List<int> getIndexFullDay({required List<WeatherBase> forecast,
+    required RepositoryQualifier qualifier}) {
+  var first = DateFormat.MMMd()
+      .format(getDateFormat(qualifier).parse(forecast.first.date));
+  List<int> result = [];
+  for (int i = 0; i < forecast.length; i++) {
+    var current = DateFormat.MMMd()
+        .format(getDateFormat(qualifier).parse(forecast[i].date));
+    if (first != current) {
+      first = current;
+      result.add(i);
+    }
+  }
+  return result;
 }

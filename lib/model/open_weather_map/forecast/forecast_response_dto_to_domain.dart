@@ -13,7 +13,7 @@ extension ForecastResponseDtoToDomain on ForecastResponseDTO {
           minTemp: e.main?.tempMin ?? -100,
           maxTemp: e.main?.tempMax ?? 11,
           humidity: e.main?.humidity ?? -100,
-          pressure: e.main?.pressure ?? -100,
+          pressure: convertHpaToMRS(e.main?.pressure ?? -100),
           weeklyForecast: null,
           vision: e.visibility,
           sunRise: getLocalTimeInUtcOnTimezone(city.sunrise, city.timezone),
