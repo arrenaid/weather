@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/utils.dart';
@@ -14,9 +16,22 @@ class WeeklyForecastListView extends StatelessWidget {
 
   final List<WeatherBase> forecast;
   final RepositoryQualifier qualifier;
+  getIndexFullDay(){
+    var first = DateFormat.MMMd().format(getDateFormat(qualifier).parse(forecast.first.date));
+    List<int> result= [];
+    for(int i = 0; i < forecast.length; i++){
+      var current = DateFormat.MMMd().format(getDateFormat(qualifier).parse(forecast[i].date));
+      if (first != current){
+        first = current;
+        result.add(i);
+      }
+    }
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<int> indexList = qualifier == RepositoryQualifier.openWeatherMap ?  getIndexFullDay(): [];
     return SizedBox(
         height: 120,
         child: OverflowBox(
@@ -43,17 +58,37 @@ class WeeklyForecastListView extends StatelessWidget {
                       qualifier: qualifier,
                       height: 30,
                     ),
+                    if(qualifier == RepositoryQualifier.openWeatherMap) ...[
+                      Text(
+                        DateFormat.Hm().format(
+                            getDateFormat(qualifier).parse(forecast[index].date)),
+                        style: tsDefault.copyWith(fontSize: 18),
+                      ),
+                    ]else...[
                     Text(
                       DateFormat.MMMd().format(
                           getDateFormat(qualifier).parse(forecast[index].date)),
                       style: tsDefault.copyWith(fontSize: 18),
-                    ),
+                    ),],
                   ],
                 ),
               );
             },
             separatorBuilder: (BuildContext context, int index) {
-              return const SizedBox(width: 15);
+              if(qualifier == RepositoryQualifier.openWeatherMap && indexList.contains(index)){
+                return Center(
+                  child: Transform.rotate(
+                    angle: pi/2,
+                    child: Text(
+                      DateFormat.MMMd().format(getDateFormat(qualifier).parse(forecast[index].date)),
+                      style: tsBigTemp.copyWith(fontSize: 24),
+                    ),
+                  ),
+                );
+              } else {
+                return const SizedBox(width: 15);
+              }
+
             },
             itemCount: forecast.length,
           ),
