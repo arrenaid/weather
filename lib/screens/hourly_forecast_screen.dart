@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/bloc/hourly_forecast_bloc.dart';
-import 'package:weather/bloc/weather_bloc.dart';
 import 'package:weather/constants.dart';
 import 'package:weather/model/weather_base.dart';
 import 'package:weather/widgets/load_image.dart';
@@ -28,7 +27,6 @@ class HourlyForecastScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = context.read<WeatherBloc>().state.city;
     final currentClr = getCurrentColor();
     List<Color> clrs = [];
     clrs.addAll(colors);
@@ -60,7 +58,7 @@ class HourlyForecastScreen extends StatelessWidget {
                   children: [
                     const SizedBox(height: 16),
                     SizedBox(
-                      height: 35,
+                      height: 45,
                       child: OverflowBox(
                         maxWidth: MediaQuery.of(context).size.width,
                         child: ListView.separated(
@@ -69,12 +67,16 @@ class HourlyForecastScreen extends StatelessWidget {
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (BuildContext context, int indexChip) {
                             return ChoiceChip(
+                              shape: const StadiumBorder(
+                                side:  BorderSide(color: Colors.black, width: 2),
+                              ),
                               label: Text(tag[indexChip]),
                               labelStyle: tsMini.copyWith(
                                 color: state.index == indexChip
                                     ? Colors.black
                                     : currentClr,
                               ),
+                              elevation: 0,
                               padding: const EdgeInsets.all(10),
                               selected: state.index == indexChip,
                               selectedColor: secondClr,
@@ -99,7 +101,7 @@ class HourlyForecastScreen extends StatelessWidget {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: state.sorted.length,
                       itemBuilder: (context, index) {
-                        if(state.index == 1){
+                        if (state.index == 1) {
                           return Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: ForecastDailyCard(
@@ -139,7 +141,8 @@ class HourlyForecastScreen extends StatelessWidget {
                               DateFormat.MMMMd().format(getDateFormat(
                                       RepositoryQualifier.openWeatherMap)
                                   .parse(state.sorted[index + 1].date)),
-                              style: tsTitleBolt.copyWith(fontSize: 30, letterSpacing: 4),
+                              style: tsTitleBolt.copyWith(
+                                  fontSize: 30, letterSpacing: 4),
                             ),
                           );
                         } else {
@@ -151,7 +154,8 @@ class HourlyForecastScreen extends StatelessWidget {
                       alignment: const FractionalOffset(0, 0),
                       child: Transform.rotate(
                           angle: pi,
-                          child: ArrowButton(execute: () => Navigator.pop(context))),
+                          child: ArrowButton(
+                              execute: () => Navigator.pop(context))),
                     ),
                   ],
                 ),
@@ -324,7 +328,7 @@ class HourlyWeatherItem extends StatelessWidget {
                           style: tsLite.copyWith(fontSize: 20, color: color),
                           children: [
                             TextSpan(
-                                text: '${weather.humidity!.round()}',
+                                text: '${weather.humidity.round()}',
                                 style: tsBigTemp.copyWith(
                                     fontSize: 40, color: color)),
                             TextSpan(
