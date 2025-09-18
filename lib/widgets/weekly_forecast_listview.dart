@@ -71,8 +71,8 @@ class WeeklyForecastListView extends StatelessWidget {
                   child: Transform.rotate(
                     angle: pi / 2,
                     child: Text(
-                      DateFormat.MMMd().format(
-                          getDateFormat(qualifier).parse(forecast[index].date)),
+                      DateFormat.MMMd().format(getDateFormat(qualifier)
+                          .parse(forecast[index + 1].date)),
                       style: tsBigTemp.copyWith(fontSize: 24),
                     ),
                   ),

@@ -80,7 +80,7 @@ List<int> getIndexFullDay({required List<WeatherBase> forecast,
         .format(getDateFormat(qualifier).parse(forecast[i].date));
     if (first != current) {
       first = current;
-      result.add(i);
+      result.add(i - 1);
     }
   }
   return result;
