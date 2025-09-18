@@ -26,7 +26,7 @@ extension WeatherBaseUnit on WeatherBase {
       sunSet: sunSet ?? forecast.first.sunSet,
       uvIndex: uvIndex,
       angleElevationSun: angleElevationSun,
-      angleHorlySun: angleHorlySun,
+      angleHourlySun: angleHourlySun,
       snow: snow,
       precipitation: precipitation,
       dewPoint: dewPoint ?? forecast.first.dewPoint,

@@ -20,7 +20,7 @@ extension ForecastResponseDtoToDomain on ForecastResponseDTO {
           sunSet: getLocalTimeInUtcOnTimezone(city.sunset, city.timezone),
           uvIndex: null,
           angleElevationSun: null,
-          angleHorlySun: null,
+          angleHourlySun: null,
           moonRise: null,
           moonSet: null,
           moonPhase: null,

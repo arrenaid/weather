@@ -17,7 +17,7 @@ extension CurrentWeatherDtoToDomain on CurrentWeatherDTO{
         sunSet: getLocalTimeInUtcOnTimezone(sys?.sunset, timezone),
         uvIndex: null,
         angleElevationSun: null,
-        angleHorlySun: null,
+        angleHourlySun: null,
         moonRise: null,
         moonSet: null,
         moonPhase: null,

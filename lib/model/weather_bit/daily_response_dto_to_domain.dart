@@ -24,7 +24,7 @@ extension DailyResponseDtoToDomain on DailyResponseDTO {
         sunSet: getSunRiseOrSet(e.sunSetTs, timezone),
         uvIndex: e.uv,
         angleElevationSun: null,
-        angleHorlySun: null,
+        angleHourlySun: null,
         moonRise: getSunRiseOrSet(e.moonRiseTs, timezone),
         moonSet: getSunRiseOrSet(e.moonSetTs, timezone),
         moonPhase: e.moonPhase!,

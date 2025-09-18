@@ -32,7 +32,7 @@ extension DailyResponseDtoToDomain on CurrentDTO {
       airQualityIndex: aqi,
       windGusts: gust,
       angleElevationSun: elevAngle,
-      angleHorlySun: hAngle,
+      angleHourlySun: hAngle,
       windDirShort: windCDir
     );
   }
